@@ -1,0 +1,24 @@
+html, body {
+    width: 100vw;
+    height: 100vh;
+}
+
+.main-container{
+    height: 100%;
+}
+
+.footer {
+    height: 15%;
+}
+
+.header {
+    height: 20%;
+}
+
+.site-content {
+    height: 80%;
+}
+
+.table-content {
+    height: 80%;
+}
