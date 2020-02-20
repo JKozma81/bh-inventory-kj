@@ -4,15 +4,16 @@ const hbs = require('express-handlebars');
 
 const productsRouter = require('./routes/products_rout');
 
-
 const PORT = 3000;
 const app = express();
 app.engine('handlebars', hbs());
 app.set('view engine', 'handlebars');
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(productsRouter);
+app.use('/products', productsRouter);
 
 
 
