@@ -5,14 +5,16 @@
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "nodemon inventorysrv.js"
+		"start": "node inventorysrv.js",
+		"dev": "nodemon inventorysrv.js",
+		"createDB": "node dbinit.js"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/JKozma81/bh-inventory-kj.git"
 	},
 	"keywords": [],
-	"author": "",
+	"author": "Kozma János",
 	"license": "ISC",
 	"bugs": {
 		"url": "https://github.com/JKozma81/bh-inventory-kj/issues"

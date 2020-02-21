@@ -1,10 +1,11 @@
-<form method="POST" action="/products">
+<form method="POST" action="/products" class="needs-validation new-products">
   <div class="form-row align-items-center">
     <div class="form-group col-md-4">
       <label for="prodName" class="col-form-label">Megnevezés:</label>
     </div>
     <div class="form-group col-md-8">
-      <input type="text" class="form-control" id="prodName" name="product_name" placeholder="Termék megnevezése">
+      <input type="text" class="form-control" id="prodName" name="product_name" placeholder="Termék megnevezése"
+        required>
     </div>
   </div>
   <div class="form-row align-items-center">
@@ -12,8 +13,7 @@
       <label for="prodCat" class="col-form-label">Csoport:</label>
     </div>
     <div class="form-group col-md-8">
-      <select class="custom-select my-1 mr-sm-2" id="prodCat" name="product_cat">
-        <option selected>Válassz...</option>
+      <select class="custom-select my-1 mr-sm-2" id="prodCat" name="product_cat" required>
         {{#each categories}}
         <option value={{this}}>{{this}}</option>
         {{/each}}
@@ -25,3 +25,18 @@
     <button type="submit" class="btn btn-primary">Ok</button>
   </div>
 </form>
+
+<script>
+  (function () {
+    window.addEventListener('load', function () {
+      const form = document.querySelector('.new-products');
+      form.addEventListener('submit', function (event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    }, false);
+  })();
+</script>

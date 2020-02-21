@@ -1,0 +1,21 @@
+{{#each items}}
+<tr>
+    <th class="text-center align-middle">{{this.id}}</th>
+    <td class="text-center align-middle">{{this.name}}</td>
+    <td class="text-center align-middle">{{this.stock}}</td>
+    <td class="text-center align-middle">
+        <button type="button" class="btn btn-info" data-id={{this.id}} data-stock={{this.stock}}
+            onclick="showStockModal()">Szerkesztés</button>
+    </td>
+</tr>
+{{/each}}
+
+<script>
+    function showStockModal() {
+        $('#stock_modal').modal();
+        const stockQuantityInput = document.querySelector('#stock_quantity_input');
+        const stockItemIdInput = document.querySelector('.stock_item_id');
+        stockQuantityInput.value = event.target.dataset.stock;
+        stockItemIdInput.value = event.target.dataset.id;
+    }
+</script>

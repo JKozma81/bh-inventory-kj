@@ -4,14 +4,17 @@
             <tr>
                 <th class="text-center">ID</th>
                 <th class="text-center">Megnevezés</th>
-                <th class="text-center">Csoport</th>
+                <th class="text-center">{{#if products}} Csoport {{/if}}{{#if stocks}}
+                    Mennyiség {{/if}}</th>
                 <th class="text-center">Műveletek</th>
             </tr>
         </thead>
         <tbody>
-            {{> table_data}}
+            {{#if products}} {{> products_table_data}} {{/if}}
+            {{#if stocks}} {{> stocks_table_data}} {{/if}}
+
         </tbody>
     </table>
 </div>
 
-{{> footer }}
+{{#if products}} {{> footer }} {{/if}}
