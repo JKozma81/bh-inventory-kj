@@ -3,9 +3,11 @@
     <th class="text-center align-middle">{{this.id}}</th>
     <td class="text-center align-middle">{{this.name}}</td>
     <td class="text-center align-middle">{{this.category}}</td>
+    <td class="text-center align-middle">{{this.description}}</td>
     <td class="text-center align-middle">
         <button type="button" class="btn btn-info" data-id={{this.id}} data-prodname="{{this.name}}"
-            data-prodcat="{{this.category}}" onclick="new_product()">Szerkesztés</button>
+            data-prodcat="{{this.category}}" data-proddesc="{{this.description}}"
+            onclick="new_product()">Szerkesztés</button>
         <button type="button" class="btn btn-danger" data-id={{this.id}}>Törlés</button>
     </td>
 </tr>

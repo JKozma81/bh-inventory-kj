@@ -7,7 +7,7 @@ const db = new sqlite3.Database('inventory.db');
 
 router.get('/', (req, res) => {
     db.serialize(function () {
-        db.all("SELECT id, name, category from products", (err, results) => {
+        db.all("SELECT id, name, category, description from products", (err, results) => {
             if (err != null) {
                 console.error(err.toString());
             }
@@ -27,11 +27,11 @@ router.get('/', (req, res) => {
 
 
 router.post('/', (req, res) => {
-    const { product_name, product_cat } = req.body;
+    const { product_name, product_cat, product_desc } = req.body;
 
     if (product_name && product_cat) {
         db.serialize(function () {
-            db.run(`INSERT INTO products(name, category) VALUES ("${product_name}", "${product_cat}")`, (err) => {
+            db.run(`INSERT INTO products(name, category, description) VALUES ("${product_name}", "${product_cat}", "${product_desc}")`, (err) => {
                 if (err != null) {
                     console.error(err.toString())
                 }

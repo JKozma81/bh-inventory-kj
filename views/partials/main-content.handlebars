@@ -1,11 +1,12 @@
 <div class="table-responsive">
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover table-sm">
         <thead class="thead-light">
             <tr>
                 <th class="text-center">ID</th>
                 <th class="text-center">Megnevezés</th>
                 <th class="text-center">{{#if products}} Csoport {{/if}}{{#if stocks}}
                     Mennyiség {{/if}}</th>
+                {{#if products}}<th class="text-center">Leírás</th>{{/if}}
                 <th class="text-center">Műveletek</th>
             </tr>
         </thead>
