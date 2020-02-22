@@ -1,0 +1,30 @@
+<form method="POST" action="/categories" class="needs-validation new-categs">
+    <div class="form-row align-items-center">
+        <div class="form-group col-md-4">
+            <label for="prodName" class="col-form-label">Megnevezés:</label>
+        </div>
+        <div class="form-group col-md-8">
+            <input type="text" class="form-control" id="catName" name="categ_name" placeholder="Csoport megnevezése"
+                required>
+        </div>
+    </div>
+    <div class=" d-flex justify-content-between">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Mégsem</button>
+        <button type="submit" class="btn btn-primary">Ok</button>
+    </div>
+</form>
+
+<script>
+    (function () {
+        window.addEventListener('load', function () {
+            const form = document.querySelector('.new-categs');
+            form.addEventListener('submit', function (event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        }, false);
+    })();
+</script>

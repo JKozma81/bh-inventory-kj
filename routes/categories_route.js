@@ -23,7 +23,17 @@ router.get('/', (req, res) => {
 })
 
 router.post('/', (req, res) => {
+    const { categ_name } = req.body;
 
+    db.serialize(() => {
+        db.run(`INSERT INTO categories(category_name) VALUES ("${categ_name}")`, (err) => {
+            if (err != null) {
+                console.error(err.toString());
+            }
+        })
+    })
+
+    res.redirect('/categories');
 })
 
 module.exports = router;

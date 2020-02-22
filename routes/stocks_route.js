@@ -5,7 +5,7 @@ const db = new sqlite3.Database('inventory.db');
 
 router.get('/', (req, res) => {
     db.serialize(function () {
-        db.all("SELECT products.id, products.name, products.category, inventory.stock FROM products JOIN inventory ON products.id = inventory.product_id", function (err, results) {
+        db.all("SELECT products.id, products.name, products.category_id, inventory.stock FROM products JOIN inventory ON products.id = inventory.product_id", function (err, results) {
             if (err != null) {
                 console.error(err.toString())
             }
