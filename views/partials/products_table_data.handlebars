@@ -6,7 +6,7 @@
     <td class="text-center align-middle">
         <button type="button" class="btn btn-info" data-id={{this.id}} data-prodname="{{this.name}}"
             data-prodcat="{{this.category}}" data-proddesc="{{this.description}}"
-            onclick="new_product()">Szerkesztés</button>
+            onclick="update_product()">Szerkesztés</button>
         <button type="button" class="btn btn-danger" data-id={{this.id}} data-name="{{this.name}}"
             onclick="delete_product()">Törlés</button>
     </td>
@@ -15,7 +15,7 @@
 
 
 <script>
-    function new_product() {
+    function update_product() {
         const updateForm = document.querySelector('.new-products');
         const updateProdId = event.target.dataset.id;
         const updateProdCat = event.target.dataset.prodcat;
@@ -24,13 +24,10 @@
         updateForm.action = `/products/${updateProdId}`
         $('#new_product').modal();
 
-        const prodNameInput = document.querySelector('#prodName');
-        const prodCatSelect = document.querySelector('#prodCat');
-        const prodDescTextbox = document.querySelector('#prod_description');
+        document.querySelector('#prodName').value = updateProdName;
+        document.querySelector('#prodCat').value = updateProdCat;
+        document.querySelector('#prod_description').value = updateProdDesc;
 
-        prodNameInput.value = updateProdName;
-        prodCatSelect.value = updateProdCat;
-        prodDescTextbox.value = updateProdDesc;
     }
 
     function delete_product() {

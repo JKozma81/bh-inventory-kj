@@ -3,10 +3,33 @@
     <th class="text-center align-middle">{{this.id}}</th>
     <td class="text-center align-middle">{{this.category_name}}</td>
     <td class="text-center align-middle">
-        <button type="button" class="btn btn-info" data-id={{this.id}} data-prodname="{{this.category_name}}"
-            data-prodcat="{{this.category}}" onclick="">Szerkesztés</button>
-        <button type="button" class="btn btn-danger" data-id={{this.id}} data-name="{{this.category_name}}"
-            onclick="">Törlés</button>
+        <button type="button" class="btn btn-info" data-id={{this.id}} data-categ_name="{{this.category_name}}"
+            onclick="update_category()">Szerkesztés</button>
+        <button type="button" class="btn btn-danger" data-id={{this.id}} data-categ_name="{{this.category_name}}"
+            onclick="delete_categ()">Törlés</button>
     </td>
 </tr>
 {{/each}}
+
+<script>
+
+    function update_category() {
+        const newCategForm = document.querySelector('.new-categs');
+        console.log(event.target.dataset)
+        const categId = event.target.dataset.id;
+        const categName = event.target.dataset.categ_name;
+        newCategForm.action = `/categories/${categId}`;
+        $('#new_category').modal();
+
+        document.querySelector('#catName').value = categName;
+    }
+
+    function delete_categ() {
+        const catId = event.target.dataset.id;
+        const categName = event.target.dataset.categ_name;
+        const deleteForm = document.querySelector('.delete-categ');
+        document.querySelector('.categ-name').textContent = categName;
+        deleteForm.action = `/categories/del/${catId}`
+        $('#delete_categ').modal();
+    }
+</script>

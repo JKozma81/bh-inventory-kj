@@ -36,4 +36,36 @@ router.post('/', (req, res) => {
     res.redirect('/categories');
 })
 
+router.post('/:id', (req, res) => {
+    const catId = req.params.id;
+    const { categ_name } = req.body;
+    db.serialize(function () {
+
+        if (catId) {
+            db.run(`UPDATE categories SET category_name = "${categ_name}" WHERE id = ${+catId}`, (err) => {
+                if (err != null) {
+                    console.error(err.toString())
+                }
+            })
+        }
+    })
+
+    res.redirect('/categories');
+})
+
+router.post('/del/:id', (req, res) => {
+    const delId = req.params.id;
+
+    db.serialize(function () {
+        if (delId) {
+            db.run(`UPDATE categories SET category_name = "${categ_name}" WHERE id = ${+catId}`, (err) => {
+                if (err != null) {
+                    console.error(err.toString())
+                }
+            })
+        }
+    })
+    res.redirect('/categories');
+})
+
 module.exports = router;

@@ -16,11 +16,14 @@ router.get('/', (req, res) => {
                 }
 
                 const result = products.map(product => {
+
+                    const tempCateg = categs.find(categ => categ.id === product.category_id);
+
                     return {
                         id: product.id,
                         name: product.name,
                         description: product.description,
-                        category: categs.find(categ => categ.id === product.category_id).category_name
+                        category: tempCateg ? tempCateg.category_name : ''
                     }
                 })
 
