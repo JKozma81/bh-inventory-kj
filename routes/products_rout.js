@@ -25,6 +25,7 @@ router.get('/', (req, res) => {
     });
 })
 
+
 router.post('/', (req, res) => {
     const { product_name, product_cat } = req.body;
 
@@ -50,6 +51,24 @@ router.post('/', (req, res) => {
             })
         })
     }
+})
+
+router.post('/:id', (req, res) => {
+    const itemId = req.params.id;
+
+    const { product_name, product_cat } = req.body;
+    db.serialize(function () {
+
+        if (product_name && product_cat) {
+            db.run(`UPDATE products SET name = "${product_name}", category = "${product_cat}" WHERE id = ${+itemId}`, (err) => {
+                if (err != null) {
+                    console.error(err.toString())
+                }
+            })
+        }
+    })
+
+    res.redirect('/products');
 })
 
 module.exports = router;

@@ -4,8 +4,29 @@
     <td class="text-center align-middle">{{this.name}}</td>
     <td class="text-center align-middle">{{this.category}}</td>
     <td class="text-center align-middle">
-        <button type="button" class="btn btn-info" data-id={{this.id}}>Szerkesztés</button>
+        <button type="button" class="btn btn-info" data-id={{this.id}} data-prodname="{{this.name}}"
+            data-prodcat="{{this.category}}" onclick="new_product()">Szerkesztés</button>
         <button type="button" class="btn btn-danger" data-id={{this.id}}>Törlés</button>
     </td>
 </tr>
 {{/each}}
+
+
+<script>
+    function new_product() {
+        const updateForm = document.querySelector('.new-products');
+        const updateProdId = event.target.dataset.id;
+        const updateProdCat = event.target.dataset.prodcat;
+        const updateProdName = event.target.dataset.prodname;
+        updateForm.action = `/products/${updateProdId}`
+        $('#new_product').modal();
+
+        const prodNameInput = document.querySelector('#prodName');
+        const prodCatSelect = document.querySelector('#prodCat');
+
+        prodNameInput.value = updateProdName;
+        prodCatSelect.value = updateProdCat;
+
+
+    }
+</script>
