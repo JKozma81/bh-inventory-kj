@@ -2,8 +2,9 @@ const express = require('express');
 const path = require('path');
 const hbs = require('express-handlebars');
 
-const productsRouter = require('./routes/products_rout');
-const stocksRouter = require('./routes/stocks_rout');
+const productsRouter = require('./routes/products_route');
+const stocksRouter = require('./routes/stocks_route');
+const categoryRouter = require('./routes/categories_route');
 
 const PORT = 3000;
 const app = express();
@@ -15,6 +16,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/products', productsRouter);
 app.use('/stocks', stocksRouter);
+app.use('/categories', categoryRouter);
 
 app.get('/', (req, res) => {
     res.redirect('/products')

@@ -18,7 +18,7 @@ img {
 }
 
 .table-responsive {
-	height: 85%;
+	min-height: 85%;
 }
 
 .header {

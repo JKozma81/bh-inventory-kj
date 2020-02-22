@@ -7,20 +7,25 @@ const db = new sqlite3.Database('inventory.db');
 
 router.get('/', (req, res) => {
     db.serialize(function () {
-        db.all("SELECT id, name, category, description from products", (err, results) => {
+        db.all("SELECT id, name, category, description from products", (err, products) => {
             if (err != null) {
                 console.error(err.toString());
             }
 
-            res.render('home', {
-                title: 'Termékek',
-                products: true,
-                stocks: false,
-                groups: false,
-                items: results,
-                categories: dummyCats
-            })
+            db.all("SELECT * FROM categories", (err, results) => {
+                if (err != null) {
+                    console.error(err.toString());
+                }
 
+                res.render('home', {
+                    title: 'Termékek',
+                    products: true,
+                    stocks: false,
+                    groups: false,
+                    items: products,
+                    categories: results
+                })
+            })
         });
     });
 })

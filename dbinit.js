@@ -15,6 +15,13 @@ db.serialize(function () {
     db.run("INSERT INTO inventory(product_id, stock) VALUES (2, 13)");
     db.run("INSERT INTO inventory(product_id, stock) VALUES (3, 4)");
     db.run("INSERT INTO inventory(product_id, stock) VALUES (4, 2)");
+
+    db.run("CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY, category_name VARCHAR(60) NOT NULL)");
+
+    db.run("INSERT INTO categories(category_name) VALUES ('Számítástechnika')");
+    db.run("INSERT INTO categories(category_name) VALUES ('Okos otthon')");
+    db.run("INSERT INTO categories(category_name) VALUES ('Mobil telefon')");
+    db.run("INSERT INTO categories(category_name) VALUES ('EKönyv')");
 });
 
 // db.close();

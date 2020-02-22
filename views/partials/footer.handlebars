@@ -1,3 +1,6 @@
 <div class="container text-right footer d-flex flex-row justify-content-end align-items-center p-3">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_product">Új termék</button>
+    {{#if products}}<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_product">Új
+        termék</button>{{/if}}
+    {{#if groups}}<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_category">Új
+        Csoport</button>{{/if}}
 </div>

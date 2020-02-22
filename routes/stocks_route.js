@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
                 layout: 'stock',
                 products: false,
                 stocks: true,
-                groups: false,
+                categories: false,
                 items: results
             });
 

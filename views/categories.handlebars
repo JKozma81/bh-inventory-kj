@@ -1,0 +1,16 @@
+<div class="container main-container border">
+    <div class="container row header p-2">
+        <div class="col-2 container-fluid d-flex flex-row justify-content-center align-items-center">
+            <img src="./img/logo.jpg" alt="" class="img-fluid">
+        </div>
+        {{> title}}
+    </div>
+    <div class="container row site-content">
+        <div class="col-2 main-nav container-fluid">
+            {{> sidebar }}
+        </div>
+        <div class="col-10 main-content container-fluid">
+            {{> categories_content }}
+        </div>
+    </div>
+</div>
