@@ -71,4 +71,21 @@ router.post('/:id', (req, res) => {
     res.redirect('/products');
 })
 
+router.post('/del/:id', (req, res) => {
+    const delId = req.params.id;
+    db.serialize(function () {
+        db.run(`DELETE FROM products WHERE id = ${delId}`, (err) => {
+            if (err != null) {
+                console.error(err.toString())
+            }
+        })
+        db.run(`DELETE FROM inventory WHERE product_id = ${delId}`, (err) => {
+            if (err != null) {
+                console.error(err.toString())
+            }
+        })
+    })
+    res.redirect('/products');
+})
+
 module.exports = router;

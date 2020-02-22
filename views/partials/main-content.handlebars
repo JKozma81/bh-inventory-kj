@@ -11,6 +11,7 @@
         </thead>
         <tbody>
             {{#if products}} {{> products_table_data}} {{/if}}
+            {{#if products}} {{> delete_modal }} {{/if}}
             {{#if stocks}} {{> stocks_table_data}} {{/if}}
 
         </tbody>

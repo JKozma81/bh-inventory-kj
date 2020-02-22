@@ -7,7 +7,8 @@
         <button type="button" class="btn btn-info" data-id={{this.id}} data-prodname="{{this.name}}"
             data-prodcat="{{this.category}}" data-proddesc="{{this.description}}"
             onclick="new_product()">Szerkesztés</button>
-        <button type="button" class="btn btn-danger" data-id={{this.id}}>Törlés</button>
+        <button type="button" class="btn btn-danger" data-id={{this.id}} data-name="{{this.name}}"
+            onclick="delete_product()">Törlés</button>
     </td>
 </tr>
 {{/each}}
@@ -30,5 +31,15 @@
         prodNameInput.value = updateProdName;
         prodCatSelect.value = updateProdCat;
         prodDescTextbox.value = updateProdDesc;
+    }
+
+    function delete_product() {
+        const prodId = event.target.dataset.id;
+        const prodName = event.target.dataset.name;
+        const deleteForm = document.querySelector('.delete-prod');
+        const prodNameDisplay = document.querySelector('.prod-name');
+        prodNameDisplay.textContent = prodName;
+        deleteForm.action = `/products/del/${prodId}`
+        $('#delete_prod').modal();
     }
 </script>
