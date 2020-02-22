@@ -3,7 +3,6 @@
     <th class="text-center align-middle">{{this.id}}</th>
     <td class="text-center align-middle">{{this.name}}</td>
     <td class="text-center align-middle">{{this.category}}</td>
-    <td class="text-center align-middle">{{this.description}}</td>
     <td class="text-center align-middle">
         <button type="button" class="btn btn-info" data-id={{this.id}} data-prodname="{{this.name}}"
             data-prodcat="{{this.category}}" data-proddesc="{{this.description}}"
@@ -20,15 +19,16 @@
         const updateProdId = event.target.dataset.id;
         const updateProdCat = event.target.dataset.prodcat;
         const updateProdName = event.target.dataset.prodname;
+        const updateProdDesc = event.target.dataset.proddesc;
         updateForm.action = `/products/${updateProdId}`
         $('#new_product').modal();
 
         const prodNameInput = document.querySelector('#prodName');
         const prodCatSelect = document.querySelector('#prodCat');
+        const prodDescTextbox = document.querySelector('#prod_description');
 
         prodNameInput.value = updateProdName;
         prodCatSelect.value = updateProdCat;
-
-
+        prodDescTextbox.value = updateProdDesc;
     }
 </script>
