@@ -40,7 +40,7 @@ db.serialize(function() {
 
 	db.run('INSERT INTO product_groups(category_id, product_id) VALUES (1, 1)');
 	db.run('INSERT INTO product_groups(category_id, product_id) VALUES (1, 2)');
-	db.run('INSERT INTO product_groups(category_id, product_id) VALUES (2, 2)');
+	db.run('INSERT INTO product_groups(category_id, product_id) VALUES (2, 3)');
 	db.run('INSERT INTO product_groups(category_id, product_id) VALUES (1, 4)');
 });
 

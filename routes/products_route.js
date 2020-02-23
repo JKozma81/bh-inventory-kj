@@ -11,6 +11,8 @@ router.get('/', (req, res) => {
 		.then((data) => {
 			const [ prods, categs ] = data;
 
+			console.log('homepage', prods);
+
 			const refinedData = prods.map((prod) => {
 				return {
 					id: prod.id,
@@ -34,29 +36,39 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
 	const { product_name, product_cat, product_desc } = req.body;
+
+	const categIDs = [];
+
 	if (product_name && product_cat) {
 		const insertProd = db_run(
 			`INSERT INTO products(name, description) VALUES ("${product_name}", "${product_desc}")`
 		);
 		const prodId = db_get(`SELECT id FROM products WHERE name = "${product_name}"`);
 
-		Promise.all([ prodId, insertProd ])
-			.then((data) => {
-				const productID = data[0];
+		if (product_cat instanceof Object) {
+			product_cat.forEach((category) => {
+				categIDs.push(db_get(`SELECT id FROM categories WHERE category_name = "${category}"`));
+			});
+		} else {
+			categIDs.push(db_get(`SELECT id FROM categories WHERE category_name = "${product_cat}"`));
+		}
 
-				db_run(`INSERT INTO inventory(product_id, stock) VALUES (${productID.id}, 0)`);
+		Promise.all([ prodId, ...categIDs ]).then((data) => {
+			const [ productId, ...categoryIDs ] = data;
 
-				db_get(`SELECT id FROM categories WHERE category_name = "${product_cat}"`)
-					.then((catId) => {
-						return db_run(
-							`INSERT INTO product_groups (category_id, product_id) VALUES (${catId.id}, ${productID.id})`
-						);
-					})
-					.then(() => {
-						res.redirect('/products');
-					});
-			})
-			.catch((err) => console.error(err));
+			Promise.all([
+				db_run(`INSERT INTO inventory(product_id, stock) VALUES (${productId.id}, 0)`),
+				categoryIDs.forEach((catId) => {
+					db_run(
+						`INSERT INTO product_groups (category_id, product_id) VALUES (${+catId.id}, ${productId.id})`
+					);
+				})
+			])
+				.then(() => {
+					res.redirect('/products');
+				})
+				.catch((err) => console.error(err));
+		});
 	}
 });
 
