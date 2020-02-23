@@ -11,12 +11,21 @@ router.get('/', (req, res) => {
 		.then((data) => {
 			const [ prods, categs ] = data;
 
+			const refinedData = prods.map((prod) => {
+				return {
+					id: prod.id,
+					name: prod.name,
+					description: prod.description,
+					category: prod.category ? prod.category : 'n/a'
+				};
+			});
+
 			res.render('home', {
 				title: 'Termékek',
 				products: true,
 				stocks: false,
 				groups: false,
-				items: prods,
+				items: refinedData,
 				categories: categs
 			});
 		})
@@ -53,37 +62,45 @@ router.post('/', (req, res) => {
 
 router.post('/:id', (req, res) => {
 	const itemId = req.params.id;
+	const { product_name, product_cat, product_desc } = req.body;
 
-	const { product_name, product_cat } = req.body;
-	db.serialize(function() {
-		if (product_name && product_cat) {
-			db.get(`SELECT id FROM categories WHERE category_name ="${product_cat}"`, (err, catId) => {
-				if (err != null) {
-					console.error(err.toString());
-				}
+	if (product_name && product_cat) {
+		const categID = db_get(`SELECT id FROM categories WHERE category_name ="${product_cat}"`);
 
-				db.run(
-					`UPDATE products SET name = "${product_name}", category_id = ${+catId.id} WHERE id = ${+itemId}`,
-					(err) => {
-						if (err != null) {
-							console.error(err.toString());
-						}
-					}
-				);
-			});
-		}
-	});
+		categID
+			.then((categoryID) => {
+				console.log(categoryID);
+				db_run(
+					`UPDATE products SET name = "${product_name}", description = "${product_desc}" WHERE id = ${+itemId}`
+				).catch((err) => console.error(err));
 
-	res.redirect('/products');
+				const categs = db_get(`SELECT * FROM product_groups WHERE product_id = ${+itemId}`);
+
+				categs.then((data) => {
+					if (data)
+						return db_run(
+							`UPDATE product_groups SET category_id = "${data.id}" WHERE product_id = ${+itemId}`
+						);
+
+					return db_run(
+						`INSERT INTO product_groups (category_id, product_id) VALUES (${categoryID.id}, ${+itemId})`
+					);
+				});
+			})
+			.then(() => {
+				res.redirect('/products');
+			})
+			.catch((err) => console.error(err));
+	}
 });
 
 router.post('/del/:id', (req, res) => {
 	const delId = req.params.id;
 
-	const deleteProd = db_run(`DELETE FROM products WHERE id = ${delId}`);
-	const deleteInventory = db_run(`DELETE FROM inventory WHERE product_id = ${delId}`);
-
-	Promise.all([ deleteProd, deleteInventory ])
+	Promise.all([
+		db_run(`DELETE FROM products WHERE id = ${delId}`),
+		db_run(`DELETE FROM inventory WHERE product_id = ${delId}`)
+	])
 		.then(() => {
 			res.redirect('/products');
 		})

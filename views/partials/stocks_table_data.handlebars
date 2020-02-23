@@ -12,10 +12,13 @@
 
 <script>
     function showStockModal() {
+        const stockItemID = event.target.dataset.id;
+        const stockCangeForm = document.querySelector('.stock_quantity_change');
+        stockCangeForm.action = `/stocks/${stockItemID}`
+
         $('#stock_modal').modal();
         const stockQuantityInput = document.querySelector('#stock_quantity_input');
-        const stockItemIdInput = document.querySelector('.stock_item_id');
         stockQuantityInput.value = event.target.dataset.stock;
-        stockItemIdInput.value = event.target.dataset.id;
+
     }
 </script>

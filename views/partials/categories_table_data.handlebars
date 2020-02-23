@@ -15,7 +15,6 @@
 
     function update_category() {
         const newCategForm = document.querySelector('.new-categs');
-        console.log(event.target.dataset)
         const categId = event.target.dataset.id;
         const categName = event.target.dataset.categ_name;
         newCategForm.action = `/categories/${categId}`;
@@ -28,8 +27,9 @@
         const catId = event.target.dataset.id;
         const categName = event.target.dataset.categ_name;
         const deleteForm = document.querySelector('.delete-categ');
-        document.querySelector('.categ-name').textContent = categName;
+        console.log(document.querySelector('#delete-categ'))
         deleteForm.action = `/categories/del/${catId}`
-        $('#delete_categ').modal();
+        $('#delete_cat_modal').modal();
+        document.querySelector('.categ-name').textContent = categName;
     }
 </script>
