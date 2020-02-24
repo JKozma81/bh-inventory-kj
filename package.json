@@ -7,7 +7,8 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "node inventorysrv.js",
 		"dev": "nodemon inventorysrv.js",
-		"createDB": "node dbinit.js"
+		"createDB": "node dbinit.js",
+		"populateDB": "node seed_products.js"
 	},
 	"repository": {
 		"type": "git",

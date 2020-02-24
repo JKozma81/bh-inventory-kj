@@ -1,6 +1,20 @@
 <div class="container text-right footer d-flex flex-row justify-content-end align-items-center p-3">
-    {{#if products}}<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_product">Új
+    {{#if products}}<button type="button" class="btn btn-primary" onclick="show_new_product_modal()">Új
         termék</button>{{/if}}
-    {{#if groups}}<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_category">Új
+    {{#if groups}}<button type="button" class="btn btn-primary" onclick="show_new_category_modal()">Új
         Csoport</button>{{/if}}
 </div>
+
+<script>
+    function show_new_product_modal() {
+        $('#new_product').modal();
+        document.querySelector('#prodName').value = '';
+        document.querySelector('#prodCat').value = '';
+        document.querySelector('#prod_description').value = '';
+    }
+
+    function show_new_category_modal() {
+        $('#new_category').modal();
+        document.querySelector('#catName').value = '';
+    }
+</script>

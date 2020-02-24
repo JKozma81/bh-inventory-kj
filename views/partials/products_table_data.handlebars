@@ -4,10 +4,10 @@
     <td class="text-center align-middle">{{this.name}}</td>
     <td class="text-center align-middle">{{this.category}}</td>
     <td class="text-center align-middle">
-        <button type="button" class="btn btn-info" data-id={{this.id}} data-prodname="{{this.name}}"
+        <button type="button" class="btn btn-info btn-sm" data-id={{this.id}} data-prodname="{{this.name}}"
             data-prodcat="{{this.category}}" data-proddesc="{{this.description}}"
             onclick="update_product()">Szerkesztés</button>
-        <button type="button" class="btn btn-danger" data-id={{this.id}} data-name="{{this.name}}"
+        <button type="button" class="btn btn-danger btn-sm" data-id={{this.id}} data-name="{{this.name}}"
             onclick="delete_product()">Törlés</button>
     </td>
 </tr>
@@ -23,7 +23,6 @@
         const updateProdDesc = event.target.dataset.proddesc;
         updateForm.action = `/products/${updateProdId}`
         $('#new_product').modal();
-
         document.querySelector('#prodName').value = updateProdName;
         document.querySelector('#prodCat').value = updateProdCat;
         document.querySelector('#prod_description').value = updateProdDesc;

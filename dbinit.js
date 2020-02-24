@@ -1,9 +1,9 @@
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('inventory.db');
 
-db.serialize(function() {
+db.serialize(function () {
 	db.run(
-		'CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(100) NOT NULL, description TEXT NOT NULL)'
+		'CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(100) NOT NULL, description TEXT)'
 	);
 
 	db.run(
