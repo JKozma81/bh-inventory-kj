@@ -23,9 +23,19 @@
         const updateProdDesc = event.target.dataset.proddesc;
         updateForm.action = `/products/${updateProdId}`
         $('#new_product').modal();
+
         document.querySelector('#prodName').value = updateProdName;
-        document.querySelector('#prodCat').value = updateProdCat;
         document.querySelector('#prod_description').value = updateProdDesc;
+        if (updateProdCat.indexOf(', ') > -1) {
+            updateProdCat.split(', ').forEach(prodCat => {
+                Array.from(document.querySelectorAll('select[name="product_cat"] option'))
+                    .find(element => element.value === prodCat).selected = true;
+            })
+        } else {
+            document.querySelector('#prodCat').value = updateProdCat;
+        }
+
+
 
     }
 
