@@ -8,6 +8,10 @@ img {
 	width: 100%;
 }
 
+th .active {
+	background-color: #6c757d !important;
+}
+
 .main-container {
 	min-height: 720px;
 }

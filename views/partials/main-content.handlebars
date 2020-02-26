@@ -2,12 +2,12 @@
     {{#if products}} {{> products_filter_form }} {{/if}}
     <table class="table table-bordered table-hover table-sm">
         <thead class="thead-light">
-            <tr>
-                <th class="text-center">ID</th>
-                <th class="text-center">Megnevezés</th>
-                <th class="text-center">{{#if products}} Csoport {{/if}}{{#if stocks}}
-                    Mennyiség {{/if}}</th>
-                <th class="text-center">Műveletek</th>
+            <tr class="nav-pills nav-fill">
+                <th class="text-center nav-item"><a href="#" class="nav-link active">ID</a></th>
+                <th class="text-center nav-item"><a href="#" class="nav-link">Megnevezés</a></th>
+                <th class="text-center nav-item"><a href="#" class="nav-link">{{#if products}} Csoport {{/if}}{{#if stocks}}
+                    Mennyiség {{/if}}</a></th>
+                <th class="text-center align-middle">Műveletek</th>
             </tr>
         </thead>
         <tbody>
@@ -22,14 +22,14 @@
 
         <div class="col-6 container text-right">
             {{#if showPrev}}
-                <a href="" class="btn btn-primary btn-lg btn-sm prev-btn" role="button" data-max="{{lastPage}}" data-page="{{prevPage}}" aria-pressed="true"> &lt; Prev</a>
+                <a href="" class="btn btn-primary btn-sm prev-btn" role="button" data-max="{{lastPage}}" data-page="{{prevPage}}" aria-pressed="true"> &lt; Prev</a>
             {{/if}}
 
         </div>
 
         <div class="col-6 container text-left">
             {{#if showNext}}
-                <a href="" class="btn btn-primary btn-lg active btn-sm next-btn" role="button" data-max="{{lastPage}}" data-page="{{nextPage}}" aria-pressed="true"> Next &gt;</a>
+                <a href="" class="btn btn-primary active btn-sm next-btn" role="button" data-max="{{lastPage}}" data-page="{{nextPage}}" aria-pressed="true"> Next &gt;</a>
             {{/if}}
 
         </div>

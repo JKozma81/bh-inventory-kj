@@ -7,12 +7,12 @@ const getStockQuantity = async (req, res, next) => {
 		req.offset = req.query.page ? (+req.query.page - 1) * LIMIT : 0;
 		const stockPile = await db_getAll(
 			`SELECT
-                products.id,
-                products.name,
-                inventory.stock
-            FROM products
-            JOIN inventory
-            ON products.id = inventory.product_id`
+        products.id,
+        products.name,
+        inventory.stock
+      FROM products
+      JOIN inventory
+      ON products.id = inventory.product_id`
 		);
 
 		const stockItems = await db_get('SELECT COUNT(*) AS itemsInStock FROM inventory');

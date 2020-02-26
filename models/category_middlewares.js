@@ -5,8 +5,13 @@ const LIMIT = 30;
 const getAlldata = async (req, res, next) => {
 	try {
 		req.offset = req.query.page ? (+req.query.page - 1) * LIMIT : 0;
-		const data = await db_getAll(`SELECT * from categories LIMIT ${LIMIT}
-        OFFSET ${req.offset}`);
+		const data = await db_getAll(
+			`SELECT
+			* 
+			FROM categories
+			LIMIT ${LIMIT}
+			OFFSET ${req.offset}`
+		);
 
 		const categoriyCount = db_get('SELECT COUNT(id) AS items FROM categories');
 
