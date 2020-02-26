@@ -18,11 +18,7 @@ const getStockQuantity = async (req, res, next) => {
 		const stockItems = await db_get('SELECT COUNT(*) AS itemsInStock FROM inventory');
 
 		req.totalProducts = stockItems.itemsInStock;
-		req.hasNextPage = LIMIT * (+req.query.page ? +req.query.page : 1) < req.totalProducts;
-		req.hasPrevPage = req.query.page ? +req.query.page > 1 : false;
-		req.nextPage = req.query.page ? +req.query.page + 1 : 2;
-		req.prevPage = req.query.page ? +req.query.page - 1 : 1;
-		req.lastPage = Math.ceil(req.totalProducts / LIMIT);
+		req.limit = LIMIT;
 
 		req.stockData = stockPile;
 		next();

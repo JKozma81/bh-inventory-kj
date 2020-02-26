@@ -11,11 +11,7 @@ const getAlldata = async (req, res, next) => {
 		const categoriyCount = db_get('SELECT COUNT(id) AS items FROM categories');
 
 		req.totalProducts = categoriyCount.items;
-		req.hasNextPage = LIMIT * (+req.query.page ? +req.query.page : 1) < req.totalProducts;
-		req.hasPrevPage = req.query.page ? +req.query.page > 1 : false;
-		req.nextPage = req.query.page ? +req.query.page + 1 : 2;
-		req.prevPage = req.query.page ? +req.query.page - 1 : 1;
-		req.lastPage = Math.ceil(req.totalProducts / LIMIT);
+		req.limit = LIMIT;
 
 		req.data = data;
 		next();

@@ -16,11 +16,7 @@ const getAllProducts = async (req, res, next) => {
 			);
 
 			req.totalProducts = filteredProducts.items;
-			req.hasNextPage = LIMIT * (+req.query.page ? +req.query.page : 1) < req.totalProducts;
-			req.hasPrevPage = req.query.page ? +req.query.page > 1 : false;
-			req.nextPage = req.query.page ? +req.query.page + 1 : 2;
-			req.prevPage = req.query.page ? +req.query.page - 1 : 1;
-			req.lastPage = Math.ceil(req.totalProducts / LIMIT);
+			req.limit = LIMIT;
 
 			const categories = await db_getAll('SELECT * FROM categories');
 			req.products = filteredProducts;
@@ -49,11 +45,7 @@ const getAllProducts = async (req, res, next) => {
 			const itemsCount = await db_get('SELECT COUNT(*) as items FROM products');
 
 			req.totalProducts = itemsCount.items;
-			req.hasNextPage = LIMIT * (+req.query.page ? +req.query.page : 1) < req.totalProducts;
-			req.hasPrevPage = req.query.page ? +req.query.page > 1 : false;
-			req.nextPage = req.query.page ? +req.query.page + 1 : 2;
-			req.prevPage = req.query.page ? +req.query.page - 1 : 1;
-			req.lastPage = Math.ceil(req.totalProducts / LIMIT);
+			req.limit = LIMIT;
 
 			const categories = await db_getAll('SELECT * FROM categories');
 

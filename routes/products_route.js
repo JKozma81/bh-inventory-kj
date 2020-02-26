@@ -18,13 +18,13 @@ router.get('/', getAllProducts, (req, res) => {
 		groups: false,
 		items: refinedData,
 		categories: req.categories,
-		showNext: req.hasNextPage,
-		showPrev: req.hasPrevPage,
+		showNext: req.limit * (+req.query.page ? +req.query.page : 1) < req.totalProducts,
+		showPrev: req.query.page ? +req.query.page > 1 : false,
 		maxPage: req.maxPage,
 		totalProducts: req.totalProducts,
-		nextPage: req.nextPage,
-		prevPage: req.prevPage,
-		lastPage: req.lastPage,
+		nextPage: req.query.page ? +req.query.page + 1 : 2,
+		prevPage: req.query.page ? +req.query.page - 1 : 1,
+		lastPage: Math.ceil(req.totalProducts / req.limit),
 		curentPage: req.query.page
 	});
 });
