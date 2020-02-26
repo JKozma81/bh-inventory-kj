@@ -1,44 +1,62 @@
-const { db_getAll, db_run } = require('./database_operations');
+const { db_getAll, db_run, db_get } = require('./database_operations');
+
+const LIMIT = 30;
 
 const getAlldata = async (req, res, next) => {
-    try {
-        const data = await db_getAll('SELECT * from categories');
-        req.data = data;
-        next();
-    }
-    catch (err) { console.error(err) }
-}
+	try {
+		req.offset = req.query.page ? (+req.query.page - 1) * LIMIT : 0;
+		const data = await db_getAll(`SELECT * from categories LIMIT ${LIMIT}
+        OFFSET ${req.offset}`);
+
+		const categoriyCount = db_get('SELECT COUNT(id) AS items FROM categories');
+
+		req.totalProducts = categoriyCount.items;
+		req.hasNextPage = LIMIT * (+req.query.page ? +req.query.page : 1) < req.totalProducts;
+		req.hasPrevPage = req.query.page ? +req.query.page > 1 : false;
+		req.nextPage = req.query.page ? +req.query.page + 1 : 2;
+		req.prevPage = req.query.page ? +req.query.page - 1 : 1;
+		req.lastPage = Math.ceil(req.totalProducts / LIMIT);
+
+		req.data = data;
+		next();
+	} catch (err) {
+		console.error(err);
+	}
+};
 
 const newCategory = async (req, res, next) => {
-    try {
-        const { categ_name } = req.body;
-        await db_run(`INSERT INTO categories(category_name) VALUES ("${categ_name}")`);
-        next();
-    }
-    catch (err) { console.error(err) }
-}
+	try {
+		const { categ_name } = req.body;
+		await db_run(`INSERT INTO categories(category_name) VALUES ("${categ_name}")`);
+		next();
+	} catch (err) {
+		console.error(err);
+	}
+};
 
 const modifyCategory = async (req, res, next) => {
-    try {
-        const catId = req.params.id;
-        const { categ_name } = req.body;
+	try {
+		const catId = req.params.id;
+		const { categ_name } = req.body;
 
-        if (typeof +catId === 'number') {
-            await db_run(`UPDATE categories SET category_name = "${categ_name}" WHERE id = ${+catId}`)
-            next();
-        }
-    }
-    catch (err) { console.error(err) }
-}
+		if (typeof +catId === 'number') {
+			await db_run(`UPDATE categories SET category_name = "${categ_name}" WHERE id = ${+catId}`);
+			next();
+		}
+	} catch (err) {
+		console.error(err);
+	}
+};
 
 const deleteCategory = async (req, res, next) => {
-    try {
-        const delId = req.params.id;
-        await db_run(`DELETE FROM categories WHERE id = ${delId}`);
-        await db_run(`DELETE FROM product_groups WHERE category_id = ${delId}`)
-        next();
-    }
-    catch (err) { console.error(err) }
-}
+	try {
+		const delId = req.params.id;
+		await db_run(`DELETE FROM categories WHERE id = ${delId}`);
+		await db_run(`DELETE FROM product_groups WHERE category_id = ${delId}`);
+		next();
+	} catch (err) {
+		console.error(err);
+	}
+};
 
-module.exports = { getAlldata, newCategory, modifyCategory, deleteCategory }
+module.exports = { getAlldata, newCategory, modifyCategory, deleteCategory };

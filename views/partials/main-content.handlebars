@@ -17,6 +17,46 @@
 
         </tbody>
     </table>
+
+    <div class="container-fluid row d-flex">
+
+        <div class="col-6 container text-right">
+            {{#if showPrev}}
+                <a href="" class="btn btn-primary btn-lg btn-sm prev-btn" role="button" data-max="{{lastPage}}" data-page="{{prevPage}}" aria-pressed="true"> &lt; Prev</a>
+            {{/if}}
+
+        </div>
+
+        <div class="col-6 container text-left">
+            {{#if showNext}}
+                <a href="" class="btn btn-primary btn-lg active btn-sm next-btn" role="button" data-max="{{lastPage}}" data-page="{{nextPage}}" aria-pressed="true"> Next &gt;</a>
+            {{/if}}
+
+        </div>
+
+    </div>
+
 </div>
 
 {{#if products}} {{> footer }} {{/if}}
+
+<script>
+    const nextBtn = document.querySelector('.next-btn');
+    if(nextBtn) {
+        nextBtn.addEventListener('click', () => {
+
+            nextBtn.setAttribute('href', `/products?page=${event.target.dataset.page}`);
+            console.log(nextBtn.dataset.page)
+        }, false)
+    }
+
+
+    const prevBtn = document.querySelector('.prev-btn');
+
+    if(prevBtn) {
+        console.log(prevBtn.dataset.page)
+        prevBtn.addEventListener('click', () => {
+            prevBtn.setAttribute('href', `/products?page=${event.target.dataset.page}`);
+        })
+    }
+</script>

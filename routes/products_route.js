@@ -2,7 +2,6 @@ const router = require('express').Router();
 const { getAllProducts, modifyProduct, deleteProduct, createNewProduct } = require('../models/products_middlewares');
 
 router.get('/', getAllProducts, (req, res) => {
-
 	const refinedData = req.products.map((prod) => {
 		return {
 			id: prod.id,
@@ -18,9 +17,16 @@ router.get('/', getAllProducts, (req, res) => {
 		stocks: false,
 		groups: false,
 		items: refinedData,
-		categories: req.categories
+		categories: req.categories,
+		showNext: req.hasNextPage,
+		showPrev: req.hasPrevPage,
+		maxPage: req.maxPage,
+		totalProducts: req.totalProducts,
+		nextPage: req.nextPage,
+		prevPage: req.prevPage,
+		lastPage: req.lastPage,
+		curentPage: req.query.page
 	});
-
 });
 
 router.post('/', createNewProduct, (req, res) => {
