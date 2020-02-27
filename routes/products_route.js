@@ -13,9 +13,6 @@ router.get('/', getAllProducts, (req, res) => {
 
 	res.render('home', {
 		title: 'Termékek',
-		products: true,
-		stocks: false,
-		groups: false,
 		items: refinedData,
 		categories: req.categories,
 		showNext: req.limit * (+req.query.page ? +req.query.page : 1) < req.totalProducts,
@@ -25,7 +22,10 @@ router.get('/', getAllProducts, (req, res) => {
 		nextPage: req.query.page ? +req.query.page + 1 : 2,
 		prevPage: req.query.page ? +req.query.page - 1 : 1,
 		lastPage: Math.ceil(req.totalProducts / req.limit),
-		curentPage: req.query.page
+		curentPage: req.query.page,
+		ordering: (req.query.order ? req.query.order === 'ASC' ? 'DESC' : 'ASC' : 'DESC'),
+		orderby: req.query.orderby || 'id',
+		menu: 'products'
 	});
 });
 

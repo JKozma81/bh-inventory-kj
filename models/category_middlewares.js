@@ -9,6 +9,7 @@ const getAlldata = async (req, res, next) => {
 			`SELECT
 			* 
 			FROM categories
+			ORDER BY ${req.query.orderby ? req.query.orderby : 'id'} ${req.query.order ? req.query.order : 'ASC'}
 			LIMIT ${LIMIT}
 			OFFSET ${req.offset}`
 		);

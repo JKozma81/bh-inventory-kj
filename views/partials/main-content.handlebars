@@ -1,19 +1,14 @@
 <div class="table-responsive">
-    {{#if products}} {{> products_filter_form }} {{/if}}
+    {{#ifeq menu 'products'}} {{> products_filter_form }} {{/ifeq}}
     <table class="table table-bordered table-hover table-sm">
-        <thead class="thead-light">
-            <tr class="nav-pills nav-fill">
-                <th class="text-center nav-item"><a href="#" class="nav-link active">ID</a></th>
-                <th class="text-center nav-item"><a href="#" class="nav-link">Megnevezés</a></th>
-                <th class="text-center nav-item"><a href="#" class="nav-link">{{#if products}} Csoport {{/if}}{{#if stocks}}
-                    Mennyiség {{/if}}</a></th>
-                <th class="text-center align-middle">Műveletek</th>
-            </tr>
-        </thead>
+        {{> table_head }}
         <tbody>
-            {{#if products}} {{> products_table_data}} {{/if}}
-            {{#if products}} {{> delete_modal }} {{/if}}
-            {{#if stocks}} {{> stocks_table_data}} {{/if}}
+            {{#ifeq menu 'products'}} {{> products_table_data}} {{/ifeq}}
+            {{#ifeq menu 'products'}} {{> delete_modal }} {{/ifeq}}
+            {{#ifeq menu 'stocks'}} {{> stocks_table_data}} {{/ifeq}}
+
+            {{#ifeq menu 'categories'}}{{> delete_categ_modal }}{{/ifeq}}
+            {{#ifeq menu 'categories'}}{{> categories_table_data }}{{/ifeq}}
 
         </tbody>
     </table>
@@ -22,14 +17,20 @@
 
         <div class="col-6 container text-right">
             {{#if showPrev}}
-                <a href="" class="btn btn-primary btn-sm prev-btn" role="button" data-max="{{lastPage}}" data-page="{{prevPage}}" aria-pressed="true"> &lt; Prev</a>
+            <a href="" class="btn btn-primary btn-sm prev-btn" role="button"
+                data-ordering="{{#if orderby}}{{orderby}}{{/if}}" data-order="{{#if ordering}}{{ordering}}{{/if}}"
+                data-page="{{prevPage}}" aria-pressed="true">
+                &lt; Prev</a>
             {{/if}}
 
         </div>
 
         <div class="col-6 container text-left">
             {{#if showNext}}
-                <a href="" class="btn btn-primary active btn-sm next-btn" role="button" data-max="{{lastPage}}" data-page="{{nextPage}}" aria-pressed="true"> Next &gt;</a>
+            <a href="" class="btn btn-primary active btn-sm next-btn" role="button"
+                data-ordering="{{#if orderby}}{{orderby}}{{/if}}" data-order="{{#if ordering}}{{ordering}}{{/if}}"
+                data-page="{{nextPage}}" aria-pressed="true">
+                Next &gt;</a>
             {{/if}}
 
         </div>
@@ -38,22 +39,60 @@
 
 </div>
 
-{{#if products}} {{> footer }} {{/if}}
+{{#ifeq menu 'products'}} {{> footer }} {{/ifeq}}
+{{#ifeq menu 'categories'}} {{> footer }} {{/ifeq}}
 
+
+{{#ifeq menu 'products'}}
 <script>
     const nextBtn = document.querySelector('.next-btn');
-    if(nextBtn) {
+    if (nextBtn) {
         nextBtn.addEventListener('click', () => {
             nextBtn.setAttribute('href', `/products?page=${event.target.dataset.page}`);
         }, false)
     }
 
-
     const prevBtn = document.querySelector('.prev-btn');
-
-    if(prevBtn) {
+    if (prevBtn) {
         prevBtn.addEventListener('click', () => {
             prevBtn.setAttribute('href', `/products?page=${event.target.dataset.page}`);
         })
     }
 </script>
+{{/ifeq}}
+
+{{#ifeq menu 'categories'}}
+<script>
+    const nextBtn = document.querySelector('.next-btn');
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            nextBtn.setAttribute('href', `/categories?page=${event.target.dataset.page}`);
+        }, false)
+    }
+
+    const prevBtn = document.querySelector('.prev-btn');
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            prevBtn.setAttribute('href', `/categories?page=${event.target.dataset.page}`);
+        })
+    }
+</script>
+{{/ifeq}}
+
+{{#ifeq menu 'stocks'}}
+<script>
+    const nextBtn = document.querySelector('.next-btn');
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            nextBtn.setAttribute('href', `/stocks?page=${event.target.dataset.page}`);
+        }, false)
+    }
+
+    const prevBtn = document.querySelector('.prev-btn');
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            prevBtn.setAttribute('href', `/stock?page=${event.target.dataset.page}`);
+        })
+    }
+</script>
+{{/ifeq}}

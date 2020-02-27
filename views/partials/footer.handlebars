@@ -1,8 +1,8 @@
 <div class="container text-right footer d-flex flex-row justify-content-end align-items-center">
-    {{#if products}}<button type="button" class="btn btn-primary" onclick="show_new_product_modal()">Új
-        termék</button>{{/if}}
-    {{#if groups}}<button type="button" class="btn btn-primary" onclick="show_new_category_modal()">Új
-        Csoport</button>{{/if}}
+    {{#ifeq menu 'products'}}<button type="button" class="btn btn-primary" onclick="show_new_product_modal()">Új
+        termék</button>{{/ifeq}}
+    {{#ifeq menu 'categories'}}<button type="button" class="btn btn-primary" onclick="show_new_category_modal()">Új
+        Csoport</button>{{/ifeq}}
 </div>
 
 <script>

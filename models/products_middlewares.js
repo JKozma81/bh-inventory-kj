@@ -19,23 +19,23 @@ const getAllProducts = async (req, res, next) => {
 				GROUP BY products.id,
 								 products.name,
 								 products.description
-				ORDER BY products.id ASC
+				ORDER BY ${req.query.orderby ? req.query.orderby : 'products.id'} ${req.query.ordering ? req.query.ordering : 'ASC'}
 				LIMIT ${LIMIT}
 				OFFSET ${req.offset}`
 				: `SELECT
-							products.id,
-							products.name,
-							products.description,
-							GROUP_CONCAT(categories.category_name, ", ") as category
+						products.id,
+						products.name,
+						products.description,
+				GROUP_CONCAT(categories.category_name, ", ") as category
 				FROM products
 				LEFT JOIN product_groups
 				ON products.id = product_groups.product_id
 				LEFT JOIN categories
 				ON product_groups.category_id = categories.id
 				GROUP BY products.id,
-								 products.name,
-								 products.description
-				ORDER BY products.id 
+						 products.name,
+						 products.description
+				ORDER BY ${req.query.orderby ? req.query.orderby === 'category' ? 'category' : 'products.' + req.query.orderby : 'products.id'} ${req.query.order ? req.query.order : 'ASC'} 
 				LIMIT ${LIMIT}
 				OFFSET ${req.offset}`
 		);
@@ -82,12 +82,12 @@ const createNewProduct = async (req, res, next) => {
 		const productId = await db_get(`SELECT id FROM products WHERE name = "${product_name}"`);
 
 		if (product_cat instanceof Object) {
-			product_cat.forEach(async (category) => {
-				let categId = await db_get(`SELECT id FROM categories WHERE category_name = "${category}"`);
+			for (const category of product_cat) {
+				let categoryId = await db_get(`SELECT id FROM categories WHERE category_name = "${category}"`);
 				await db_run(
-					`INSERT INTO product_groups (category_id, product_id) VALUES (${+categId.id}, ${productId.id})`
+					`INSERT INTO product_groups (category_id, product_id) VALUES (${+categoryId.id}, ${productId.id})`
 				);
-			});
+			}
 		} else {
 			let categId = await db_get(`SELECT id FROM categories WHERE category_name = "${product_cat}"`);
 			await db_run(
@@ -106,8 +106,6 @@ const modifyProduct = async (req, res, next) => {
 	try {
 		const itemId = req.params.id;
 		const { product_name, product_cat, product_desc } = req.body;
-
-		console.log('req.body', req.body);
 
 		if (product_name && product_cat) {
 			await db_run(
@@ -128,8 +126,6 @@ const modifyProduct = async (req, res, next) => {
 			} else {
 				const categoryID = await db_get(`SELECT id FROM categories WHERE category_name = "${product_cat}"`);
 
-				console.log('product_cat', product_cat);
-				console.log('categoryID', categoryID);
 				await db_run(
 					`INSERT INTO product_groups (category_id, product_id) VALUES (${categoryID.id}, ${+itemId})`
 				);
