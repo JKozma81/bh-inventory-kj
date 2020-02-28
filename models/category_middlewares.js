@@ -7,7 +7,8 @@ const getAlldata = async (req, res, next) => {
 		req.offset = req.query.page ? (+req.query.page - 1) * LIMIT : 0;
 		const data = await db_getAll(
 			`SELECT
-			* 
+			id,
+			category_name 
 			FROM categories
 			ORDER BY ${req.query.orderby ? req.query.orderby : 'id'} ${req.query.order ? req.query.order : 'ASC'}
 			LIMIT ${LIMIT}
@@ -54,7 +55,7 @@ const deleteCategory = async (req, res, next) => {
 	try {
 		const delId = req.params.id;
 		await db_run(`DELETE FROM categories WHERE id = ${delId}`);
-		await db_run(`DELETE FROM product_groups WHERE category_id = ${delId}`);
+		await db_run(`DELETE FROM product_categories WHERE category_id = ${delId}`);
 		next();
 	} catch (err) {
 		console.error(err);

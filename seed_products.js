@@ -32,7 +32,13 @@ const pronouns = [
 db.serialize(function () {
     adjectives.forEach(adjective => {
         pronouns.forEach(pronoun => {
-            db.run(`INSERT INTO products(name) VALUES ("${adjective} ${pronoun}")`)
+            db.run(`INSERT INTO products(name) VALUES ("${adjective} ${pronoun}")`);
+        })
+    });
+
+    db.all(`SELECT id FROM products`, (err, rows) => {
+        rows.forEach(row => {
+            db.run(`INSERT INTO inventory(product_id, stock) VALUES (${row.id}, ${Math.floor(Math.random() * 10 + 1)})`);
         })
     })
 })

@@ -17,13 +17,12 @@ router.get('/', getAllProducts, (req, res) => {
 		categories: req.categories,
 		showNext: req.limit * (+req.query.page ? +req.query.page : 1) < req.totalProducts,
 		showPrev: req.query.page ? +req.query.page > 1 : false,
-		maxPage: req.maxPage,
 		totalProducts: req.totalProducts,
 		nextPage: req.query.page ? +req.query.page + 1 : 2,
 		prevPage: req.query.page ? +req.query.page - 1 : 1,
 		lastPage: Math.ceil(req.totalProducts / req.limit),
-		curentPage: req.query.page,
-		ordering: (req.query.order ? req.query.order === 'ASC' ? 'DESC' : 'ASC' : 'DESC'),
+		curentPage: req.query.page || 1,
+		order: req.query.order || 'ASC',
 		orderby: req.query.orderby || 'id',
 		menu: 'products'
 	});

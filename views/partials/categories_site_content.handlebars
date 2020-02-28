@@ -1,0 +1,93 @@
+<div class="table-responsive">
+    <table class="table table-bordered table-hover table-sm">
+        <thead class="thead-light">
+            <tr class="nav-pills nav-fill">
+                <th class="text-center nav-item"><a href="" onclick="ordering_by()"
+                        class="nav-link {{#ifeq orderby 'id'}}active{{/ifeq}}" data-orderby="id"
+                        data-order="{{ordering}}">ID
+                        <strong>{{#ifeqand ordering 'ASC' orderby 'id'}}&#9650;{{/ifeqand}}{{#ifeqand ordering 'DESC' orderby 'id'}}&#9660;{{/ifeqand}}</strong></a>
+                </th>
+                <th class="text-center nav-item"><a href=""
+                        class="nav-link {{#ifeq orderby 'category_name'}}active{{/ifeq}}" onclick="ordering_by()"
+                        data-orderby="category_name" data-order="{{ordering}}">Csoport
+                        <strong>{{#ifeqand ordering 'ASC' orderby 'category_name'}}&#9650;{{/ifeqand}}{{#ifeqand ordering 'DESC' orderby 'category_name'}}&#9660;{{/ifeqand}}</strong></a>
+                </th>
+                <th class="text-center align-middle">Műveletek</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {{> delete_categ_modal }}
+            {{#each items}}
+            <tr>
+                <th class="text-center align-middle">{{this.id}}</th>
+                <td class="text-center align-middle">{{this.category_name}}</td>
+                <td class="text-center align-middle">
+                    <button type="button" class="btn btn-info btn-sm" data-id={{this.id}}
+                        data-categ_name="{{this.category_name}}" onclick="update_category()">Szerkesztés</button>
+                    <button type="button" class="btn btn-danger btn-sm" data-id={{this.id}}
+                        data-categ_name="{{this.category_name}}" onclick="delete_categ()">Törlés</button>
+                </td>
+            </tr>
+            {{/each}}
+
+        </tbody>
+    </table>
+
+    <div class="container-fluid row d-flex">
+
+        <div class="col-6 container text-right">
+            {{#if showPrev}}
+            <a href="" class="btn btn-primary btn-sm prev-btn" role="button"
+                data-ordering="{{#if orderby}}{{orderby}}{{/if}}" data-order="{{#if ordering}}{{ordering}}{{/if}}"
+                data-page="{{prevPage}}" aria-pressed="true">
+                &lt; Prev</a>
+            {{/if}}
+
+        </div>
+
+        <div class="col-6 container text-left">
+            {{#if showNext}}
+            <a href="" class="btn btn-primary active btn-sm next-btn" role="button"
+                data-ordering="{{#if orderby}}{{orderby}}{{/if}}" data-order="{{#if ordering}}{{ordering}}{{/if}}"
+                data-page="{{nextPage}}" aria-pressed="true">
+                Next &gt;</a>
+            {{/if}}
+
+        </div>
+
+    </div>
+
+</div>
+
+{{> footer }}
+
+<script>
+    function update_category() {
+        const newCategForm = document.querySelector('.new-categs');
+        const categId = event.target.dataset.id;
+        const categName = event.target.dataset.categ_name;
+        newCategForm.action = `/categories/${categId}`;
+        $('#new_category').modal();
+
+        document.querySelector('#catName').value = categName;
+    }
+
+    function delete_categ() {
+        const catId = event.target.dataset.id;
+        const categName = event.target.dataset.categ_name;
+        const deleteForm = document.querySelector('.delete-categ');
+        console.log(document.querySelector('#delete-categ'))
+        deleteForm.action = `/categories/del/${catId}`
+        $('#delete_cat_modal').modal();
+        document.querySelector('.categ-name').textContent = categName;
+    }
+
+    function ordering_by() {
+        const link = event.target;
+        const ordering = link.dataset.order;
+        const orderBy = link.dataset.orderby;
+
+        link.setAttribute('href', `/categories?orderby=${orderBy}&order=${ordering}`);
+    }
+</script>

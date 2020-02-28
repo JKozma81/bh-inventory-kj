@@ -13,8 +13,8 @@ const getAllProducts = async (req, res, next) => {
 					products.name,
 					products.description,
 				GROUP_CONCAT(categories.category_name, ", ") as category
-				FROM products LEFT JOIN product_groups ON products.id = product_groups.product_id
-				LEFT JOIN categories ON product_groups.category_id = categories.id
+				FROM products LEFT JOIN product_categories ON products.id = product_categories.product_id
+				LEFT JOIN categories ON product_categories.category_id = categories.id
 				WHERE categories.category_name = "${req.query.filter_category}"
 				GROUP BY products.id,
 								 products.name,
@@ -28,14 +28,14 @@ const getAllProducts = async (req, res, next) => {
 						products.description,
 				GROUP_CONCAT(categories.category_name, ", ") as category
 				FROM products
-				LEFT JOIN product_groups
-				ON products.id = product_groups.product_id
+				LEFT JOIN product_categories
+				ON products.id = product_categories.product_id
 				LEFT JOIN categories
-				ON product_groups.category_id = categories.id
+				ON product_categories.category_id = categories.id
 				GROUP BY products.id,
 						 products.name,
 						 products.description
-				ORDER BY ${req.query.orderby ? req.query.orderby === 'category' ? 'category' : 'products.' + req.query.orderby : 'products.id'} ${req.query.order ? req.query.order : 'ASC'} 
+				ORDER BY ${req.query.orderby ? req.query.orderby === 'id' ? 'products.id' : 'products.' + req.query.orderby : 'products.id'} ${req.query.order || 'ASC'} 
 				LIMIT ${LIMIT}
 				OFFSET ${req.offset}`
 		);
@@ -51,8 +51,8 @@ const getAllProducts = async (req, res, next) => {
 					products.name,
 					products.description,
 				GROUP_CONCAT(categories.category_name, ", ") as category
-				FROM products LEFT JOIN product_groups ON products.id = product_groups.product_id
-				LEFT JOIN categories ON product_groups.category_id = categories.id
+				FROM products LEFT JOIN product_categories ON products.id = product_categories.product_id
+				LEFT JOIN categories ON product_categories.category_id = categories.id
 				WHERE categories.category_name = "${req.query.filter_category}"
 				GROUP BY products.id,
 								products.name,
@@ -64,7 +64,7 @@ const getAllProducts = async (req, res, next) => {
 		req.totalProducts = itemCount.items;
 		req.limit = LIMIT;
 
-		const categories = await db_getAll('SELECT * FROM categories');
+		const categories = await db_getAll('SELECT id, category_name FROM categories');
 		req.products = productsWithCategs;
 		req.categories = categories;
 		next();
@@ -85,13 +85,13 @@ const createNewProduct = async (req, res, next) => {
 			for (const category of product_cat) {
 				let categoryId = await db_get(`SELECT id FROM categories WHERE category_name = "${category}"`);
 				await db_run(
-					`INSERT INTO product_groups (category_id, product_id) VALUES (${+categoryId.id}, ${productId.id})`
+					`INSERT INTO product_categories (category_id, product_id) VALUES (${+categoryId.id}, ${productId.id})`
 				);
 			}
 		} else {
 			let categId = await db_get(`SELECT id FROM categories WHERE category_name = "${product_cat}"`);
 			await db_run(
-				`INSERT INTO product_groups (category_id, product_id) VALUES (${+categId.id}, ${productId.id})`
+				`INSERT INTO product_categories (category_id, product_id) VALUES (${+categId.id}, ${productId.id})`
 			);
 		}
 
@@ -112,13 +112,13 @@ const modifyProduct = async (req, res, next) => {
 				`UPDATE products SET name = "${product_name}", description = "${product_desc}" WHERE id = ${+itemId}`
 			);
 
-			await db_run(`DELETE FROM product_groups WHERE product_id = ${+itemId}`);
+			await db_run(`DELETE FROM product_categories WHERE product_id = ${+itemId}`);
 
 			if (typeof product_cat === 'object') {
 				for (const category of product_cat) {
 					const categId = await db_get(`SELECT id FROM categories WHERE category_name ="${category}"`);
 					await db_run(
-						`INSERT INTO product_groups (category_id, product_id) VALUES (${categId.id}, ${+itemId})`
+						`INSERT INTO product_categories (category_id, product_id) VALUES (${categId.id}, ${+itemId})`
 					);
 				}
 
@@ -127,7 +127,7 @@ const modifyProduct = async (req, res, next) => {
 				const categoryID = await db_get(`SELECT id FROM categories WHERE category_name = "${product_cat}"`);
 
 				await db_run(
-					`INSERT INTO product_groups (category_id, product_id) VALUES (${categoryID.id}, ${+itemId})`
+					`INSERT INTO product_categories (category_id, product_id) VALUES (${categoryID.id}, ${+itemId})`
 				);
 				next();
 			}

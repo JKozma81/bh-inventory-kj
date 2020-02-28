@@ -1,0 +1,67 @@
+<div class="table-responsive">
+    <table class="table table-bordered table-hover table-sm">
+        <thead class="thead-light">
+            <tr class="nav-pills nav-fill">
+                <th class="text-center nav-item"><a href="" onclick="ordering_by()"
+                        class="nav-link {{#ifeq orderby 'id'}}active{{/ifeq}}" data-orderby="id"
+                        data-order="{{ordering}}">ID
+                        <strong>{{#ifeqand ordering 'ASC' orderby 'id'}}&#9650;{{/ifeqand}}{{#ifeqand ordering 'DESC' orderby 'id'}}&#9660;{{/ifeqand}}</strong></a>
+                </th>
+                <th class="text-center nav-item"><a href="" class="nav-link {{#ifeq orderby 'name'}}active{{/ifeq}}"
+                        onclick="ordering_by()" data-orderby="name" data-order="{{ordering}}">Megnevezés
+                        <strong>{{#ifeqand ordering 'ASC' orderby 'name'}}&#9650;{{/ifeqand}}{{#ifeqand ordering 'DESC' orderby 'name'}}&#9660;{{/ifeqand}}</strong></a>
+                </th>
+                <th class="text-center nav-item"><a href="" onclick="ordering_by()" data-orderby="stock"
+                        class="nav-link {{#ifeq orderby 'stock'}}active{{/ifeq}}" data-order="{{ordering}}">
+                        Mennyiség
+                        <strong>{{#ifeqand ordering 'ASC' orderby 'stock'}}&#9650;{{/ifeqand}}{{#ifeqand ordering 'DESC' orderby 'stock'}}&#9660;{{/ifeqand}}</strong></a>
+                </th>
+                <th class="text-center align-middle">Műveletek</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {{#each items}}
+            <tr>
+                <th class="text-center align-middle">{{this.id}}</th>
+                <td class="text-center align-middle">{{this.name}}</td>
+                <td class="text-center align-middle">{{this.stock}}</td>
+                <td class="text-center align-middle">
+                    <button type="button" class="btn btn-info btn-sm" data-id={{this.id}} data-stock={{this.stock}}
+                        onclick="showStockModal()">Szerkesztés</button>
+                </td>
+            </tr>
+            {{/each}}
+
+        </tbody>
+    </table>
+
+    <div class="container-fluid row d-flex">
+
+
+
+    </div>
+
+</div>
+
+
+<script>
+    function showStockModal() {
+        const stockItemID = event.target.dataset.id;
+        const stockCangeForm = document.querySelector('.stock_quantity_change');
+        stockCangeForm.action = `/stocks/${stockItemID}`
+
+        $('#stock_modal').modal();
+        const stockQuantityInput = document.querySelector('#stock_quantity_input');
+        stockQuantityInput.value = event.target.dataset.stock;
+
+    }
+
+    function ordering_by() {
+        const link = event.target;
+        const ordering = link.dataset.order;
+        const orderBy = link.dataset.orderby;
+
+        link.setAttribute('href', `/stocks?orderby=${orderBy}&order=${ordering}`);
+    }
+</script>
