@@ -3,9 +3,10 @@
     <table class="table table-bordered table-hover table-sm">
         <thead class="thead-light">
             <tr class="nav-pills nav-fill">
-                <th class="text-center nav-item"><a href="" onclick="ordering_by()"
-                        class="nav-link {{#ifeq orderby 'id'}}active{{/ifeq}}" data-orderby="id"
-                        data-order="{{ordering}}">ID
+                <th class="text-center nav-item"><a
+                        href="/products?page={{curentPage}}&order={{order}}&orderby={{orderby}}"
+                        class="nav-link id-sort {{#ifeq orderby 'id'}}active{{/ifeq}}" data-orderby="id"
+                        data-order="{{order}}" data-curentpage="{{curentPage}}">ID
                         <strong>{{#ifeqand order 'ASC' orderby 'id'}}&#9650;{{/ifeqand}}{{#ifeqand order 'DESC' orderby 'id'}}&#9660;{{/ifeqand}}</strong></a>
                 </th>
                 <th class="text-center nav-item"><a href="" class="nav-link {{#ifeq orderby 'name'}}active{{/ifeq}}"
@@ -80,13 +81,10 @@
 
 <script>
 
-    function ordering_by() {
-        const link = event.target;
-        const ordering = link.dataset.order;
-        const orderBy = link.dataset.orderby;
-
-        link.setAttribute('href', `/products?orderby=${orderBy}&order=${ordering}`);
-    }
+    document.querySelector('.id-sort').addEventListener('click', (e) => {
+        e.target.setAttribute('data-order', event.target.dataset.order === 'ASC' ? 'DESC' : 'ASC')
+        e.target.setAttribute('href', `/products?page=${e.target.dataset.curentpage}&orderby=${e.target.dataset.orderby}&order=${e.target.dataset.order}`);
+    })
 
     function update_product() {
         const updateForm = document.querySelector('.new-products');
@@ -94,7 +92,7 @@
         const updateProdCat = event.target.dataset.prodcat;
         const updateProdName = event.target.dataset.prodname;
         const updateProdDesc = event.target.dataset.proddesc;
-        updateForm.action = `/products/${updateProdId}`
+        updateForm.action = `/ products / ${updateProdId} `
         $('#new_product').modal();
 
         document.querySelector('#prodName').value = updateProdName;
@@ -116,7 +114,7 @@
         const deleteForm = document.querySelector('.delete-prod');
         const prodNameDisplay = document.querySelector('.prod-name');
         prodNameDisplay.textContent = prodName;
-        deleteForm.action = `/products/del/${prodId}`
+        deleteForm.action = `/ products / del / ${prodId}`
         $('#delete_prod').modal();
     }
 

@@ -4,6 +4,8 @@ const LIMIT = 30;
 
 const getAllProducts = async (req, res, next) => {
 	try {
+
+		console.log('mw1', req.query)
 		req.offset = req.query.page ? (+req.query.page - 1) * LIMIT : 0;
 
 		const productsWithCategs = await db_getAll(
@@ -35,7 +37,7 @@ const getAllProducts = async (req, res, next) => {
 				GROUP BY products.id,
 						 products.name,
 						 products.description
-				ORDER BY ${req.query.orderby ? req.query.orderby === 'id' ? 'products.id' : 'products.' + req.query.orderby : 'products.id'} ${req.query.order || 'ASC'} 
+				ORDER BY ${req.query.orderby ? req.query.orderby === 'id' ? 'products.id' : 'products.' + req.query.orderby : 'products.id'} ${Object.keys(req.query).length === 0 ? 'ASC' : req.query.order} 
 				LIMIT ${LIMIT}
 				OFFSET ${req.offset}`
 		);
