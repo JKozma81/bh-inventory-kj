@@ -5,10 +5,12 @@ const LIMIT = 30;
 const getStockQuantity = async (req, res, next) => {
 	try {
 		req.offset = req.query.page ? (+req.query.page - 1) * LIMIT : 0;
-		let orderby = ''
-		if (req.query.orderby === 'id') orderby = 'products.id'
-		if (req.query.orderby === 'name') orderby = 'products.name'
-		if (req.query.orderby === 'stock') orderby = 'inventory.stock'
+
+		let orderingBy = ''
+		if (req.query.orderby === 'id') orderingBy = 'products.id'
+		if (req.query.orderby === 'name') orderingBy = 'products.name'
+		if (req.query.orderby === 'stock') orderingBy = 'inventory.stock'
+
 		const stockPile = await db_getAll(
 			`SELECT
         		products.id,
@@ -17,7 +19,7 @@ const getStockQuantity = async (req, res, next) => {
       		FROM products
       		JOIN inventory
 			ON products.id = inventory.product_id
-			ORDER BY ${req.query.orderby ? orderby : 'products.id'} ${req.query.order ? req.query.order : 'ASC'}
+			ORDER BY ${req.query.orderby ? orderingBy : 'products.id'} ${Object.keys(req.query).length === 0 ? 'ASC' : req.query.order}
 			LIMIT ${LIMIT}
 			OFFSET ${req.offset}`
 		);

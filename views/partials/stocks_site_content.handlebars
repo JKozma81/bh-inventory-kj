@@ -2,19 +2,21 @@
     <table class="table table-bordered table-hover table-sm">
         <thead class="thead-light">
             <tr class="nav-pills nav-fill">
-                <th class="text-center nav-item"><a href="" onclick="ordering_by()"
-                        class="nav-link {{#ifeq orderby 'id'}}active{{/ifeq}}" data-orderby="id"
-                        data-order="{{ordering}}">ID
-                        <strong>{{#ifeqand ordering 'ASC' orderby 'id'}}&#9650;{{/ifeqand}}{{#ifeqand ordering 'DESC' orderby 'id'}}&#9660;{{/ifeqand}}</strong></a>
+                <th class="text-center nav-item"><a href="/stocks?page={{curentPage}}&order={{order}}&orderby=id"
+                        onclick="setOrdering()" class="nav-link {{#ifeq orderby 'id'}}active{{/ifeq}}" data-orderby="id"
+                        data-order="{{order}}">ID
+                        <strong>{{#ifeqand order 'ASC' orderby 'id'}}&#9650;{{/ifeqand}}{{#ifeqand order 'DESC' orderby 'id'}}&#9660;{{/ifeqand}}</strong></a>
                 </th>
-                <th class="text-center nav-item"><a href="" class="nav-link {{#ifeq orderby 'name'}}active{{/ifeq}}"
-                        onclick="ordering_by()" data-orderby="name" data-order="{{ordering}}">Megnevezés
-                        <strong>{{#ifeqand ordering 'ASC' orderby 'name'}}&#9650;{{/ifeqand}}{{#ifeqand ordering 'DESC' orderby 'name'}}&#9660;{{/ifeqand}}</strong></a>
+                <th class="text-center nav-item"><a href="/stocks?page={{curentPage}}&order={{order}}&orderby=name"
+                        class="nav-link {{#ifeq orderby 'name'}}active{{/ifeq}}" onclick="setOrdering()"
+                        data-orderby="name" data-order="{{order}}">Megnevezés
+                        <strong>{{#ifeqand order 'ASC' orderby 'name'}}&#9650;{{/ifeqand}}{{#ifeqand order 'DESC' orderby 'name'}}&#9660;{{/ifeqand}}</strong></a>
                 </th>
-                <th class="text-center nav-item"><a href="" onclick="ordering_by()" data-orderby="stock"
-                        class="nav-link {{#ifeq orderby 'stock'}}active{{/ifeq}}" data-order="{{ordering}}">
+                <th class="text-center nav-item"><a href="/stocks?page={{curentPage}}&order={{order}}&orderby=stock"
+                        onclick="setOrdering()" data-orderby="stock"
+                        class="nav-link {{#ifeq orderby 'stock'}}active{{/ifeq}}" data-order="{{order}}">
                         Mennyiség
-                        <strong>{{#ifeqand ordering 'ASC' orderby 'stock'}}&#9650;{{/ifeqand}}{{#ifeqand ordering 'DESC' orderby 'stock'}}&#9660;{{/ifeqand}}</strong></a>
+                        <strong>{{#ifeqand order 'ASC' orderby 'stock'}}&#9650;{{/ifeqand}}{{#ifeqand order 'DESC' orderby 'stock'}}&#9660;{{/ifeqand}}</strong></a>
                 </th>
                 <th class="text-center align-middle">Műveletek</th>
             </tr>
@@ -36,8 +38,33 @@
         </tbody>
     </table>
 
-    <div class="container-fluid row d-flex">
-
+    <div class="container-fluid row d-flex justify-content-center">
+        <nav aria-label="Page navigation">
+            <ul class="pagination pagination-sm">
+                {{#if showPrev}}
+                <li class="page-item">
+                    <a class="page-link" href="/stocks?page={{prevPage}}&order={{order}}&orderby={{orderby}}"
+                        aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Előző</span>
+                    </a>
+                </li>
+                {{/if}}
+                {{#times lastPage}}
+                <li class="page-item"><a class="page-link"
+                        href="/stocks?page={{this}}&order={{../order}}&orderby={{../orderby}}">{{this}}</a></li>
+                {{/times}}
+                {{#if showNext}}
+                <li class="page-item">
+                    <a class="page-link" href="/stocks?page={{nextPage}}&order={{order}}&orderby={{orderby}}"
+                        aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Következő</span>
+                    </a>
+                </li>
+                {{/if}}
+            </ul>
+        </nav>
 
 
     </div>
@@ -57,11 +84,8 @@
 
     }
 
-    function ordering_by() {
-        const link = event.target;
-        const ordering = link.dataset.order;
-        const orderBy = link.dataset.orderby;
-
-        link.setAttribute('href', `/stocks?orderby=${orderBy}&order=${ordering}`);
+    function setOrdering() {
+        event.target.setAttribute('data-order', event.target.dataset.order === 'ASC' ? 'DESC' : 'ASC')
+        event.target.setAttribute('href', `/stocks?page=1&orderby=${event.target.dataset.orderby}&order=${event.target.dataset.order}`);
     }
 </script>

@@ -3,26 +3,26 @@
     <table class="table table-bordered table-hover table-sm">
         <thead class="thead-light">
             <tr class="nav-pills nav-fill">
-                <th class="text-center nav-item"><a
-                        href="/products?page={{curentPage}}&order={{order}}&orderby={{orderby}}"
+                <th class="text-center nav-item"><a href="/products?page={{curentPage}}&order={{order}}&orderby=id"
                         class="nav-link id-sort {{#ifeq orderby 'id'}}active{{/ifeq}}" data-orderby="id"
-                        data-order="{{order}}" data-curentpage="{{curentPage}}">ID
+                        data-order="{{order}}" onclick="setOrdering()">ID
                         <strong>{{#ifeqand order 'ASC' orderby 'id'}}&#9650;{{/ifeqand}}{{#ifeqand order 'DESC' orderby 'id'}}&#9660;{{/ifeqand}}</strong></a>
                 </th>
-                <th class="text-center nav-item"><a href="" class="nav-link {{#ifeq orderby 'name'}}active{{/ifeq}}"
-                        onclick="order_by()" data-orderby="name" data-order="{{order}}">Megnevezés
+                <th class="text-center nav-item"><a href="/products?page={{curentPage}}&order={{order}}&orderby=name"
+                        class="nav-link {{#ifeq orderby 'name'}}active{{/ifeq}}" data-orderby="name"
+                        data-order="{{order}}" onclick="setOrdering()">Megnevezés
                         <strong>{{#ifeqand order 'ASC' orderby 'name'}}&#9650;{{/ifeqand}}{{#ifeqand order 'DESC' orderby 'name'}}&#9660;{{/ifeqand}}</strong></a>
                 </th>
                 <th class="text-center nav-item">
-                    <a href="" onclick="ordering_by()" data-orderby="category"
-                        class="nav-link {{#ifeq orderby 'category'}}active{{/ifeq}}" data-order="{{order}}">
+                    <a href="/products?page={{curentPage}}&order={{order}}&orderby=category" data-orderby="category"
+                        class="nav-link {{#ifeq orderby 'category'}}active{{/ifeq}}" data-order="{{order}}"
+                        onclick="setOrdering()">
                         Csoport
                         <strong>{{#ifeqand order 'ASC' orderby 'category'}}&#9650;{{/ifeqand}}{{#ifeqand order 'DESC' orderby 'category'}}&#9660;{{/ifeqand}}</strong></a>
                 </th>
                 <th class="text-center align-middle">Műveletek</th>
             </tr>
         </thead>
-
 
         <tbody>
 
@@ -46,26 +46,25 @@
     </table>
 
     <div class="container-fluid row d-flex justify-content-center">
-
         <nav aria-label="Page navigation">
             <ul class="pagination pagination-sm">
                 {{#if showPrev}}
                 <li class="page-item">
-                    <a class="page-link prev-btn" href="/products?page={{prevPage}}&order={{order}}&orderby={{orderby}}"
-                        aria-label="Previous" data-ordering="{{orderby}}" data-order="{{order}}"
-                        data-page="{{prevPage}}">
+                    <a class="page-link" href="/products?page={{prevPage}}&order={{order}}&orderby={{orderby}}"
+                        aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                         <span class="sr-only">Előző</span>
                     </a>
                 </li>
                 {{/if}}
                 {{#times lastPage}}
-                <li class="page-item"><a class="page-link" href="#">{{this}}</a></li>
+                <li class="page-item"><a class="page-link"
+                        href="/products?page={{this}}&order={{../order}}&orderby={{../orderby}}">{{this}}</a></li>
                 {{/times}}
                 {{#if showNext}}
                 <li class="page-item">
-                    <a class="page-link next-btn" href="/products?page={{nextPage}}&order={{order}}&orderby={{orderby}}"
-                        aria-label="Next" data-ordering="{{orderby}}" data-order="{{order}}" data-page="{{nextPage}}">
+                    <a class="page-link" href="/products?page={{nextPage}}&order={{order}}&orderby={{orderby}}"
+                        aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                         <span class="sr-only">Következő</span>
                     </a>
@@ -81,10 +80,15 @@
 
 <script>
 
-    document.querySelector('.id-sort').addEventListener('click', (e) => {
+    /*document.querySelector('.id-sort').addEventListener('click', (e) => {
         e.target.setAttribute('data-order', event.target.dataset.order === 'ASC' ? 'DESC' : 'ASC')
-        e.target.setAttribute('href', `/products?page=${e.target.dataset.curentpage}&orderby=${e.target.dataset.orderby}&order=${e.target.dataset.order}`);
-    })
+        e.target.setAttribute('href', `/products?page=1&orderby=${e.target.dataset.orderby}&order=${e.target.dataset.order}`);
+    })*/
+
+    function setOrdering() {
+        event.target.setAttribute('data-order', event.target.dataset.order === 'ASC' ? 'DESC' : 'ASC')
+        event.target.setAttribute('href', `/products?page=1&orderby=${event.target.dataset.orderby}&order=${event.target.dataset.order}`);
+    }
 
     function update_product() {
         const updateForm = document.querySelector('.new-products');

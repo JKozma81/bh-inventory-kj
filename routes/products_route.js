@@ -12,18 +12,6 @@ router.get('/', getAllProducts, (req, res) => {
 	});
 
 
-	console.log('mw2', req.query);
-
-
-	// let href = '/products?';
-	// if (Object.keys(req.query).length === 0) {
-	// 	href += 'page=1&order=ASC&orderby=id';
-	// } else {
-	// 	href += `page=${req.query.page}&order=${req.query.order}&orderby=${req.query.orderby}`
-	// }
-
-
-
 	res.render('home', {
 		title: 'Termékek',
 		items: refinedData,

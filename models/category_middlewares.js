@@ -10,7 +10,7 @@ const getAlldata = async (req, res, next) => {
 			id,
 			category_name 
 			FROM categories
-			ORDER BY ${req.query.orderby ? req.query.orderby : 'id'} ${req.query.order ? req.query.order : 'ASC'}
+			ORDER BY ${Object.keys(req.query).length === 0 ? 'id' : req.query.orderby} ${Object.keys(req.query).length === 0 ? 'ASC' : req.query.order}
 			LIMIT ${LIMIT}
 			OFFSET ${req.offset}`
 		);

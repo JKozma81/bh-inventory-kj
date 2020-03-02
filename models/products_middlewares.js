@@ -5,8 +5,40 @@ const LIMIT = 30;
 const getAllProducts = async (req, res, next) => {
 	try {
 
-		console.log('mw1', req.query)
+		const itemCount = await db_get(
+			req.query.filter_category
+				? `SELECT
+					COUNT(items) as items
+				FROM
+					(SELECT
+				COUNT(products.id) AS items,
+					products.name,
+					products.description,
+				GROUP_CONCAT(categories.category_name, ", ") as category
+				FROM products LEFT JOIN product_categories ON products.id = product_categories.product_id
+				LEFT JOIN categories ON product_categories.category_id = categories.id
+				WHERE categories.category_name = "${req.query.filter_category}"
+				GROUP BY products.id,
+								products.name,
+								products.description
+				ORDER BY products.id ASC)`
+				: 'SELECT COUNT(id) as items FROM products'
+		);
+
+		req.totalProducts = itemCount.items;
+		req.limit = LIMIT;
+
 		req.offset = req.query.page ? (+req.query.page - 1) * LIMIT : 0;
+
+		let orderingBy;
+
+		if (req.query.orderby) {
+			if (req.query.orderby === 'id') orderingBy = 'products.id';
+			if (req.query.orderby === 'category') orderingBy = 'category'
+			if (req.query.orderby === 'name' || req.query.orderby === 'description') orderingBy = 'products.' + req.query.orderby;
+		} else {
+			orderingBy = 'products.id';
+		}
 
 		const productsWithCategs = await db_getAll(
 			req.query.filter_category
@@ -37,34 +69,11 @@ const getAllProducts = async (req, res, next) => {
 				GROUP BY products.id,
 						 products.name,
 						 products.description
-				ORDER BY ${req.query.orderby ? req.query.orderby === 'id' ? 'products.id' : 'products.' + req.query.orderby : 'products.id'} ${Object.keys(req.query).length === 0 ? 'ASC' : req.query.order} 
+				 
+				ORDER BY ${orderingBy} ${Object.keys(req.query).length === 0 ? 'ASC' : req.query.order} 
 				LIMIT ${LIMIT}
 				OFFSET ${req.offset}`
 		);
-
-		const itemCount = await db_get(
-			req.query.filter_category
-				? `SELECT
-					COUNT(*) as items
-				FROM
-					(SELECT
-					products.id,
-				COUNT(products.id) AS items,
-					products.name,
-					products.description,
-				GROUP_CONCAT(categories.category_name, ", ") as category
-				FROM products LEFT JOIN product_categories ON products.id = product_categories.product_id
-				LEFT JOIN categories ON product_categories.category_id = categories.id
-				WHERE categories.category_name = "${req.query.filter_category}"
-				GROUP BY products.id,
-								products.name,
-								products.description
-				ORDER BY products.id ASC)`
-				: 'SELECT COUNT(*) as items FROM products'
-		);
-
-		req.totalProducts = itemCount.items;
-		req.limit = LIMIT;
 
 		const categories = await db_getAll('SELECT id, category_name FROM categories');
 		req.products = productsWithCategs;
