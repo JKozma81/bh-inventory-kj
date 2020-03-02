@@ -12,6 +12,10 @@ th .active {
 	background-color: #6c757d !important;
 }
 
+.category-role {
+	display: none;
+}
+
 .main-container {
 	min-height: 720px;
 }

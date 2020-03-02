@@ -6,6 +6,7 @@ router.get('/', getAlldata, (req, res) => {
 		title: 'Csoportok',
 		layout: 'main',
 		items: req.data,
+		mainCategories: req.mainCategories,
 		showNext: req.limit * (+req.query.page ? +req.query.page : 1) < req.totalProducts,
 		showPrev: req.query.page ? +req.query.page > 1 : false,
 		maxPage: req.maxPage,

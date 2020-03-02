@@ -80,11 +80,6 @@
 
 <script>
 
-    /*document.querySelector('.id-sort').addEventListener('click', (e) => {
-        e.target.setAttribute('data-order', event.target.dataset.order === 'ASC' ? 'DESC' : 'ASC')
-        e.target.setAttribute('href', `/products?page=1&orderby=${e.target.dataset.orderby}&order=${e.target.dataset.order}`);
-    })*/
-
     function setOrdering() {
         event.target.setAttribute('data-order', event.target.dataset.order === 'ASC' ? 'DESC' : 'ASC')
         event.target.setAttribute('href', `/products?page=1&orderby=${event.target.dataset.orderby}&order=${event.target.dataset.order}`);

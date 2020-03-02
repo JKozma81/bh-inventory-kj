@@ -33,10 +33,10 @@ db.serialize(function () {
 	db.run("INSERT INTO categories(category_name, parent_id) VALUES ('Alaplapok', 1)");
 	db.run("INSERT INTO categories(category_name, parent_id) VALUES ('Perifériák', 1)");
 	db.run("INSERT INTO categories(category_name, parent_id) VALUES ('Okos otthon', null)");
-	db.run("INSERT INTO categories(category_name, parent_id) VALUES ('Okos kapcsolók', 2)");
-	db.run("INSERT INTO categories(category_name, parent_id) VALUES ('Okos mérőeszközök', 2)");
+	db.run("INSERT INTO categories(category_name, parent_id) VALUES ('Okos kapcsolók', 4)");
+	db.run("INSERT INTO categories(category_name, parent_id) VALUES ('Okos mérőeszközök', 4)");
 	db.run("INSERT INTO categories(category_name, parent_id) VALUES ('Mobil telefon', null)");
-	db.run("INSERT INTO categories(category_name, parent_id) VALUES ('Telefon tokok', 3)");
+	db.run("INSERT INTO categories(category_name, parent_id) VALUES ('Telefon tokok', 7)");
 	db.run("INSERT INTO categories(category_name, parent_id) VALUES ('EKönyv', null)");
 
 	db.run(
