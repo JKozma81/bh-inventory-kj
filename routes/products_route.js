@@ -22,7 +22,7 @@ router.get('/', getAllProducts, (req, res) => {
 		nextPage: req.query.page ? +req.query.page + 1 : 2,
 		prevPage: req.query.page ? +req.query.page - 1 : 1,
 		lastPage: Math.ceil(req.totalProducts / req.limit),
-		curentPage: Object.keys(req.query).length === 0 ? 1 : req.query.page,
+		curentPage: Object.keys(req.query).length === 0 ? 1 : +req.query.page,
 		order: Object.keys(req.query).length === 0 ? 'ASC' : req.query.order,
 		orderby: Object.keys(req.query).length === 0 ? 'id' : req.query.orderby,
 		menu: 'products'

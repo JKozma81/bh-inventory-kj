@@ -5,6 +5,7 @@ const hdbs = require('express-handlebars');
 const productsRouter = require('./routes/products_route');
 const stocksRouter = require('./routes/stocks_route');
 const categoryRouter = require('./routes/categories_route');
+const warehouseRouter = require('./routes/warehouses_route');
 
 const PORT = 3000;
 const app = express();
@@ -22,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/products', productsRouter);
 app.use('/stocks', stocksRouter);
 app.use('/categories', categoryRouter);
+app.use('/warehouses', warehouseRouter);
 
 app.get('/', (req, res) => {
 	res.redirect('/products');

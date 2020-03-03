@@ -1,0 +1,53 @@
+<div class="container-fluid">
+{{> delete_warehouse_modal }}
+
+<div class="row">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-header">
+          <h5>Raktár neve</h5>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Ország</h5>
+        <p class="card-text">Város</p>
+        <div class="container text-right">
+          <a href="#" class="btn btn-primary btn-sm" onclick="delete_warehouse()">Törlés</a>
+          <a href="#" class="btn btn-primary btn-sm" onclick="update_warehouse()">Szerkeszt</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+      <div class="card">
+        <img class="card-img" src="..." alt="Card image">
+      </div>
+  </div>
+</div>
+
+</div>
+
+{{> footer }}
+
+<script>
+      function update_warehouse() {
+        /*const newCategForm = document.querySelector('.new-categs');
+        const categId = event.target.dataset.id;
+        const categName = event.target.dataset.categ_name;
+        newCategForm.action = `/categories/${categId}`;*/
+        $('#new_warehouse').modal();
+
+        /*document.querySelector('#catName').value = categName;
+        document.querySelector('.main-category-selector').style.display = 'none';
+        document.querySelector('.sub-category-selector').style.display = 'none';*/
+    }
+
+    function delete_warehouse() {
+        /*const catId = event.target.dataset.id;
+        const categName = event.target.dataset.categ_name;
+        const deleteForm = document.querySelector('.delete-categ');
+        console.log(document.querySelector('#delete-categ'))
+        deleteForm.action = `/categories/del/${catId}`*/
+        $('#delete_wh_modal').modal();
+        /*document.querySelector('.categ-name').textContent = categName;*/
+    }
+</script>

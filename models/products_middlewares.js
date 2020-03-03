@@ -67,7 +67,7 @@ const getAllProducts = async (req, res, next) => {
 		} else {
 			const sqlQuery = coreSQLQuery + filterSQL + sqlFooter;
 			productsWithCategs = await db_getAll(sqlQuery);
-			itemCount = db_get(`SELECT COUNT(*) as items FROM (${sqlQuery})`);
+			itemCount = await db_get(`SELECT COUNT(*) as items FROM (${sqlQuery})`);
 		}
 
 		req.totalProducts = itemCount.items;

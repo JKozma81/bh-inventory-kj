@@ -4,7 +4,6 @@ const { getStockQuantity, modifyStockQty } = require('../models/stocks_middlewar
 router.get('/', getStockQuantity, (req, res) => {
 	res.render('home', {
 		title: 'Készletek',
-		layout: 'main',
 		items: req.stockData,
 		showNext: req.limit * (+req.query.page ? +req.query.page : 1) < req.totalProducts,
 		showPrev: req.query.page ? +req.query.page > 1 : false,

@@ -3,6 +3,8 @@
         termék</button>{{/ifeq}}
     {{#ifeq menu 'categories'}}<button type="button" class="btn btn-primary" onclick="show_new_category_modal()">Új
         Csoport</button>{{/ifeq}}
+    {{#ifeq menu 'warehouses'}}<button type="button" class="btn btn-primary" onclick="show_new_warehouse_modal()">Új
+        raktár</button>{{/ifeq}}
 </div>
 
 <script>
@@ -18,5 +20,12 @@
         document.querySelector('#catName').value = '';
         document.querySelector('.main-category-selector').style.display = 'flex';
         document.querySelector('.sub-category-selector').style.display = 'flex';
+    }
+
+    function show_new_warehouse_modal() {
+        $('#new_warehouse').modal();
+       /* document.querySelector('#catName').value = '';
+        document.querySelector('.main-category-selector').style.display = 'flex';
+        document.querySelector('.sub-category-selector').style.display = 'flex';*/
     }
 </script>
