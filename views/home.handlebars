@@ -10,11 +10,10 @@
             {{> sidebar }}
         </div>
         <div class="col-10 main-content container-fluid">
-            {{!-- {{> main-content}} --}}
 
             {{#ifeq menu 'products'}}{{> products_site_content }}{{/ifeq}}
-            {{#ifeq menu 'categories'}}{{> categories_site_content }}{{/ifeq}}
             {{#ifeq menu 'stocks'}}{{> stocks_site_content }}{{/ifeq}}
+            {{#ifeq menu 'categories'}}{{> categories_site_content }}{{/ifeq}}
         </div>
     </div>
 </div>

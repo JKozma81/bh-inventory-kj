@@ -17,7 +17,6 @@
             </tr>
         </thead>
         <tbody>
-
             {{> delete_categ_modal }}
             {{#each items}}
             <tr>
@@ -27,21 +26,19 @@
                     <button type="button" class="btn btn-info btn-sm" data-id={{this.id}}
                         data-categ_name="{{this.category_name}}" onclick="update_category()">Szerkesztés</button>
                     <button type="button" class="btn btn-danger btn-sm" data-id={{this.id}}
-                        data-categ_name="{{this.category_name}}" onclick="delete_categ()">Törlés</button>
+                        data-categ_name="{{this.category_name}}" onclick="delete_categ()" {{#unless this.canBeDeleted}}disabled{{/unless}}>Törlés</button>
                 </td>
             </tr>
             {{/each}}
-
         </tbody>
     </table>
 
     <div class="container-fluid row d-flex justify-content-center">
-
         <nav aria-label="Page navigation">
             <ul class="pagination pagination-sm">
                 {{#if showPrev}}
                 <li class="page-item">
-                    <a class="page-link" href="/categories?page={{prevPage}}&order={{order}}&orderby={{orderby}}"
+                    <a class="page-link" href="/categories?page={{prevPage}}&order={{order}}&orderby={{orderby}}{{#if filterCategory}}&filter_category={{filterCategory}}{{/if}}"
                         aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                         <span class="sr-only">Előző</span>
@@ -49,12 +46,12 @@
                 </li>
                 {{/if}}
                 {{#times lastPage}}
-                <li class="page-item"><a class="page-link"
-                        href="/categories?page={{this}}&order={{../order}}&orderby={{../orderby}}">{{this}}</a></li>
+                <li class="page-item {{#ifeq ../curentPage this}}active{{/ifeq}}"><a class="page-link"
+                        href="/categories?page={{this}}&order={{../order}}&orderby={{../orderby}}{{#if ../filterCategory}}&filter_category={{../filterCategory}}{{/if}}">{{this}}</a></li>
                 {{/times}}
                 {{#if showNext}}
                 <li class="page-item">
-                    <a class="page-link" href="/categories?page={{nextPage}}&order={{order}}&orderby={{orderby}}"
+                    <a class="page-link" href="/categories?page={{nextPage}}&order={{order}}&orderby={{orderby}}{{#if filterCategory}}&filter_category={{filterCategory}}{{/if}}"
                         aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                         <span class="sr-only">Következő</span>
@@ -63,7 +60,6 @@
                 {{/if}}
             </ul>
         </nav>
-
     </div>
 
 </div>

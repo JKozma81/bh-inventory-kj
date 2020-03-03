@@ -11,11 +11,11 @@ router.get('/', getAllProducts, (req, res) => {
 		};
 	});
 
-
 	res.render('home', {
 		title: 'Termékek',
 		items: refinedData,
 		categories: req.categories,
+		filterCategory: req.query.filter_category ? req.query.filter_category : '',
 		showNext: req.limit * (+req.query.page ? +req.query.page : 1) < req.totalProducts,
 		showPrev: req.query.page ? +req.query.page > 1 : false,
 		totalProducts: req.totalProducts,

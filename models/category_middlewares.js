@@ -8,31 +8,38 @@ const getAlldata = async (req, res, next) => {
 		const data = await db_getAll(
 			`SELECT
 			id,
-			category_name 
+			category_name,
+			parent_id
 			FROM categories
-			ORDER BY ${Object.keys(req.query).length === 0 ? 'id' : req.query.orderby} ${Object.keys(req.query).length === 0 ? 'ASC' : req.query.order}
+			ORDER BY ${Object.keys(req.query).length === 0 ? 'id' : req.query.orderby} ${Object.keys(req.query).length === 0
+				? 'ASC'
+				: req.query.order}
 			LIMIT ${LIMIT}
 			OFFSET ${req.offset}`
 		);
 
-		const mainCategories = await db_getAll(`
-			SELECT 
-				id,
-				category_name
-			FROM categories
-			WHERE parent_id IS NULL
-			ORDER BY ${Object.keys(req.query).length === 0 ? 'id' : req.query.orderby} ${Object.keys(req.query).length === 0 ? 'ASC' : req.query.order}
-			LIMIT ${LIMIT}
-			OFFSET ${req.offset}
-		`)
+		const categoriesData = data.map((category) => {
+			const tempObj = {};
+			({ id: tempObj.id, category_name: tempObj.category_name, parent_id: tempObj.parent_id } = category);
 
-		const categoriyCount = db_get('SELECT COUNT(id) AS items FROM categories');
+			if (category.parent_id === null && data.find((categ) => category.id === categ.parent_id)) {
+				tempObj.canBeDeleted = false;
+				return tempObj;
+			}
+
+			tempObj.canBeDeleted = true;
+			return tempObj;
+		});
+
+		const mainCategories = categoriesData.filter((category) => category.parent_id === null);
+
+		const categoriyCount = await db_get('SELECT COUNT(id) AS items FROM categories');
 
 		req.totalProducts = categoriyCount.items;
 		req.limit = LIMIT;
 
 		req.mainCategories = mainCategories;
-		req.data = data;
+		req.data = categoriesData;
 		next();
 	} catch (err) {
 		console.error(err);
@@ -42,13 +49,12 @@ const getAlldata = async (req, res, next) => {
 const newCategory = async (req, res, next) => {
 	try {
 		const { categ_name, categoryRole, mainCategoryName } = req.body;
-		console.log(req.body)
 
 		if (categoryRole === 'mainCategory') {
+			await db_run(`INSERT INTO categories(category_name) VALUES ("${categ_name}")`);
+		} else {
 			const mainCatId = await db_get(`SELECT id FROM categories WHERE category_name = "${mainCategoryName}"`);
 			await db_run(`INSERT INTO categories(category_name, parent_id) VALUES ("${categ_name}", ${mainCatId.id})`);
-		} else {
-			await db_run(`INSERT INTO categories(category_name) VALUES ("${categ_name}")`);
 		}
 
 		next();

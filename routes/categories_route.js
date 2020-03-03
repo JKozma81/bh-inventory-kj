@@ -4,12 +4,10 @@ const { getAlldata, newCategory, modifyCategory, deleteCategory } = require('../
 router.get('/', getAlldata, (req, res) => {
 	res.render('home', {
 		title: 'Csoportok',
-		layout: 'main',
 		items: req.data,
 		mainCategories: req.mainCategories,
 		showNext: req.limit * (+req.query.page ? +req.query.page : 1) < req.totalProducts,
 		showPrev: req.query.page ? +req.query.page > 1 : false,
-		maxPage: req.maxPage,
 		totalProducts: req.totalProducts,
 		nextPage: req.query.page ? +req.query.page + 1 : 2,
 		prevPage: req.query.page ? +req.query.page - 1 : 1,

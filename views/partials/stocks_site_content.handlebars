@@ -51,7 +51,7 @@
                 </li>
                 {{/if}}
                 {{#times lastPage}}
-                <li class="page-item"><a class="page-link"
+                <li class="page-item {{#ifeq ../curentPage this}}active{{/ifeq}}"><a class="page-link"
                         href="/stocks?page={{this}}&order={{../order}}&orderby={{../orderby}}">{{this}}</a></li>
                 {{/times}}
                 {{#if showNext}}
