@@ -6,8 +6,74 @@
                 <h5 class="modal-title" id="new_prod_title">Új raktár felvitele</h5>
             </div>
             <div class="modal-body">
-                {{> new_warehouse_form }}
+                <form method="POST" action="/warehouses" class="needs-validation new-warehouse">
+                    <div class="form-row align-items-center">
+                        <div class="form-group col-md-4">
+                            <label for="whName" class="col-form-label">Megnevezés:</label>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <input type="text" class="form-control" id="whName" name="warehouse_name"
+                                placeholder="Raktár neve" required>
+                        </div>
+                    </div>
+                    <div class="form-row align-items-center">
+                        <div class="form-group col-md-4">
+                            <label for="whCountry" class="col-form-label">Ország:</label>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <input type="text" class="form-control" id="whCountry" name="warehouse_country"
+                                placeholder="Ország" required>
+                        </div>
+                    </div>
+                    <div class="form-row align-items-center">
+                        <div class="form-group col-md-4">
+                            <label for="whZip" class="col-form-label">Irányítószám:</label>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <input type="text" class="form-control" id="whZip" name="warehouse_zip"
+                                placeholder="Irányítószám" required>
+                        </div>
+                    </div>
+                    <div class="form-row align-items-center">
+                        <div class="form-group col-md-4">
+                            <label for="whCity" class="col-form-label">Város:</label>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <input type="text" class="form-control" id="whCity" name="warehouse_city"
+                                placeholder="Város" required>
+                        </div>
+                    </div>
+                    <div class="form-row align-items-center">
+                        <div class="form-group col-md-4">
+                            <label for="wh_street" class="col-form-label">Utca, házszám:</label>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <input type="text" class="form-control" id="wh_street" name="warehouse_street_and_hn"
+                                placeholder="Utca házszám" required>
+                        </div>
+                    </div>
+
+                    <div class=" d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Mégsem</button>
+                        <button type="submit" class="btn btn-primary">Ok</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    (function () {
+        window.addEventListener('load', function () {
+            const form = document.querySelector('.new-warehouse');
+            form.addEventListener('submit', function (event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        }, false);
+    })();
+</script>

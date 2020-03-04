@@ -1,20 +1,44 @@
 <div class="table-responsive">
-    {{> products_filter_form }}
+    <div class="container-fluid d-flex justify-content-end p-3">
+        <form method="GET" action="" class="form-inline filter_by_cat">
+            <div class="form-row align-items-center">
+                <div class="form-group col-md-4">
+                    <label for="filterCat" class="col-form-label">Csoport:</label>
+                </div>
+                <div class="form-group col-md-8">
+                    <input type="text" value="id" name="orderby" hidden>
+                    <input type="text" value="ASC" name="order" hidden>
+                    <input type="text" value="1" name="page" hidden>
+                    <select class="custom-select my-1 mr-sm-2" id="filterCat" name="filter_category"
+                        onchange="this.form.submit()">
+                        <option selected>Válassz...</option>
+                        {{#each categories}}
+                        <option value="{{category_name}}" {{#ifeq ../filterCategory category_name}}selected{{/ifeq}}>
+                            {{category_name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
     <table class="table table-bordered table-hover table-sm">
         <thead class="thead-light">
             <tr class="nav-pills nav-fill">
-                <th class="text-center nav-item"><a href="/products?page={{curentPage}}&order={{order}}&orderby=id{{#if filterCategory}}&filter_category={{filterCategory}}{{/if}}"
+                <th class="text-center nav-item"><a
+                        href="/products?page={{curentPage}}&order={{order}}&orderby=id{{#if filterCategory}}&filter_category={{filterCategory}}{{/if}}"
                         class="nav-link id-sort {{#ifeq orderby 'id'}}active{{/ifeq}}" data-orderby="id"
                         data-order="{{order}}" data-filter="{{filterCategory}}" onclick="setOrdering()">ID
                         <strong>{{#ifeqand order 'ASC' orderby 'id'}}&#9650;{{/ifeqand}}{{#ifeqand order 'DESC' orderby 'id'}}&#9660;{{/ifeqand}}</strong></a>
                 </th>
-                <th class="text-center nav-item"><a href="/products?page={{curentPage}}&order={{order}}&orderby=name{{#if filterCategory}}&filter_category={{filterCategory}}{{/if}}"
-                        class="nav-link {{#ifeq orderby 'name'}}active{{/ifeq}}" data-orderby="name" data-filter="{{filterCategory}}"
-                        data-order="{{order}}" onclick="setOrdering()">Megnevezés
+                <th class="text-center nav-item"><a
+                        href="/products?page={{curentPage}}&order={{order}}&orderby=name{{#if filterCategory}}&filter_category={{filterCategory}}{{/if}}"
+                        class="nav-link {{#ifeq orderby 'name'}}active{{/ifeq}}" data-orderby="name"
+                        data-filter="{{filterCategory}}" data-order="{{order}}" onclick="setOrdering()">Megnevezés
                         <strong>{{#ifeqand order 'ASC' orderby 'name'}}&#9650;{{/ifeqand}}{{#ifeqand order 'DESC' orderby 'name'}}&#9660;{{/ifeqand}}</strong></a>
                 </th>
                 <th class="text-center nav-item">
-                    <a href="/products?page={{curentPage}}&order={{order}}&orderby=category{{#if filterCategory}}&filter_category={{filterCategory}}{{/if}}" data-orderby="category" data-filter="{{filterCategory}}"
+                    <a href="/products?page={{curentPage}}&order={{order}}&orderby=category{{#if filterCategory}}&filter_category={{filterCategory}}{{/if}}"
+                        data-orderby="category" data-filter="{{filterCategory}}"
                         class="nav-link {{#ifeq orderby 'category'}}active{{/ifeq}}" data-order="{{order}}"
                         onclick="setOrdering()">
                         Csoport
@@ -32,9 +56,9 @@
                 <td class="text-center align-middle">{{this.name}}</td>
                 <td class="text-center align-middle">{{this.category}}</td>
                 <td class="text-center align-middle">
-                    <button type="button" class="btn btn-info btn-sm" data-id="{{this.id}}" data-prodname="{{this.name}}"
-                        data-prodcat="{{this.category}}" data-proddesc="{{this.description}}"
-                        onclick="update_product()">Szerkesztés</button>
+                    <button type="button" class="btn btn-info btn-sm" data-id="{{this.id}}"
+                        data-prodname="{{this.name}}" data-prodcat="{{this.category}}"
+                        data-proddesc="{{this.description}}" onclick="update_product()">Szerkesztés</button>
                     <button type="button" class="btn btn-danger btn-sm" data-id={{this.id}} data-name="{{this.name}}"
                         onclick="delete_product()">Törlés</button>
                 </td>
@@ -50,7 +74,8 @@
             <ul class="pagination pagination-sm">
                 {{#if showPrev}}
                 <li class="page-item">
-                    <a class="page-link" href="/products?page={{prevPage}}&order={{order}}&orderby={{orderby}}{{#if filterCategory}}&filter_category={{filterCategory}}{{/if}}"
+                    <a class="page-link"
+                        href="/products?page={{prevPage}}&order={{order}}&orderby={{orderby}}{{#if filterCategory}}&filter_category={{filterCategory}}{{/if}}"
                         aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                         <span class="sr-only">Előző</span>
@@ -59,11 +84,13 @@
                 {{/if}}
                 {{#times lastPage}}
                 <li class="page-item {{#ifeq ../curentPage this}}active{{/ifeq}}"><a class="page-link"
-                        href="/products?page={{this}}&order={{../order}}&orderby={{../orderby}}{{#if ../filterCategory}}&filter_category={{../filterCategory}}{{/if}}">{{this}}</a></li>
+                        href="/products?page={{this}}&order={{../order}}&orderby={{../orderby}}{{#if ../filterCategory}}&filter_category={{../filterCategory}}{{/if}}">{{this}}</a>
+                </li>
                 {{/times}}
                 {{#if showNext}}
                 <li class="page-item">
-                    <a class="page-link" href="/products?page={{nextPage}}&order={{order}}&orderby={{orderby}}{{#if filterCategory}}&filter_category={{filterCategory}}{{/if}}"
+                    <a class="page-link"
+                        href="/products?page={{nextPage}}&order={{order}}&orderby={{orderby}}{{#if filterCategory}}&filter_category={{filterCategory}}{{/if}}"
                         aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                         <span class="sr-only">Következő</span>
@@ -96,6 +123,7 @@
 
         document.querySelector('#prodName').value = updateProdName;
         document.querySelector('#prod_description').value = updateProdDesc;
+
         if (updateProdCat.indexOf(', ') > -1) {
             updateProdCat.split(', ').forEach(prodCat => {
                 Array.from(document.querySelectorAll('select[name="product_cat"] option'))
@@ -113,7 +141,7 @@
         const deleteForm = document.querySelector('.delete-prod');
         const prodNameDisplay = document.querySelector('.prod-name');
         prodNameDisplay.textContent = prodName;
-        deleteForm.action = `/ products / del / ${prodId}`
+        deleteForm.action = `/products/del/${prodId}`
         $('#delete_prod').modal();
     }
 

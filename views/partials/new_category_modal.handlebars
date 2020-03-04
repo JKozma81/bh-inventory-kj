@@ -6,8 +6,76 @@
                 <h5 class="modal-title" id="new_prod_title">Új csoport felvitele</h5>
             </div>
             <div class="modal-body">
-                {{> new_category_form }}
+                <form method="POST" action="/categories" class="needs-validation new-categs">
+                    <div class="form-row align-items-center">
+                        <div class="form-group col-md-4">
+                            <label for="catName" class="col-form-label">Megnevezés:</label>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <input type="text" class="form-control" id="catName" name="categ_name"
+                                placeholder="Csoport megnevezése" required>
+                        </div>
+                    </div>
+                    <div class="form-group form-row">
+                        <div class="form-check col-md-6 ml-3 main-category-selector">
+                            <input class="form-check-input" type="radio" name="categoryRole" id="main_category"
+                                value="mainCategory" onchange="showMainCategories()" checked>
+                            <label class="form-check-label" for="main_category">
+                                Fő kategória
+                            </label>
+                        </div>
+                        <div class="form-check col-md-6 ml-3 sub-category-selector">
+                            <input class="form-check-input" type="radio" name="categoryRole" id="sub_category"
+                                value="subCategory" onchange="showMainCategories()">
+                            <label class="form-check-label" for="sub_category">
+                                Mellék kategória
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-row align-items-center category-role">
+                        <div class="form-group col-md-6">
+                            <label for="prodCategory" class="col-form-label">Fő kategória csoport:</label>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <select class="custom-select my-1 mr-sm-2" id="prodCategory" name="mainCategoryName"
+                                required>
+                                {{#each mainCategories}}
+                                <option value="{{category_name}}">{{category_name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class=" d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Mégsem</button>
+                        <button type="submit" class="btn btn-primary">Ok</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
+
+<script>
+    (function () {
+        window.addEventListener('load', function () {
+            const form = document.querySelector('.new-categs');
+            form.addEventListener('submit', function (event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        }, false);
+    })();
+
+    function showMainCategories() {
+        if (document.querySelector('#sub_category').checked) {
+            return document.querySelector('.category-role').style.display = 'flex';
+        }
+        return document.querySelector('.category-role').style.display = 'none';
+    }
+
+</script>

@@ -1,12 +1,29 @@
 const router = require('express').Router();
-const { getWarehouses, modifyWarehouse, deleteWarehouse } = require('../models/warehouses_middlewares');
+const { getWarehouses, modifyWarehouse, deleteWarehouse, newWarehouse } = require('../models/warehouses_middlewares');
 
 router.get('/', getWarehouses, (req, res) => {
+	const warehouses = [];
+	req.whData.forEach(warehouseInfo => {
+		const whData = {};
+		const splitAddress = warehouseInfo.address.split(', ');
+		whData.id = warehouseInfo.id;
+		whData.name = warehouseInfo.name;
+		whData.country = splitAddress[0];
+		whData.zip = splitAddress[1];
+		whData.city = splitAddress[2];
+		whData.streetAndhn = splitAddress[3];
+		warehouses.push(whData);
+	})
+
 	res.render('home', {
 		title: 'Raktárak',
-		items: req.stockData,
+		warehouses: warehouses,
 		menu: 'warehouses'
 	});
+});
+
+router.post('/', newWarehouse, (req, res) => {
+	res.redirect('/warehouses');
 });
 
 router.post('/:id', modifyWarehouse, (req, res) => {

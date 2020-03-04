@@ -30,33 +30,33 @@ const getAllProducts = async (req, res, next) => {
 		ON products.id = product_categories.product_id
 		LEFT JOIN categories
 		ON product_categories.category_id = categories.id
-	`;
+		`;
 
 		const sqlFooter = `
 		GROUP BY products.id,
-						 products.name,
-							products.description
+				 products.name,
+				 products.description
 		ORDER BY ${orderingBy} ${!req.query.order ? 'ASC' : req.query.order} 
 		LIMIT ${LIMIT}
 		OFFSET ${req.offset}
-	`;
+		`;
 
 		const filterSQL = `
-	WHERE 
-		categories.category_name = "${req.query.filter_category}"
-		OR
-		categories.category_name
-		IN 
-		(SELECT
-				subcategory.category_name
-			FROM
-				categories
-			LEFT JOIN categories AS subcategory
-			ON
-				categories.id = subcategory.parent_id
-			WHERE
-				categories.category_name = "${req.query.filter_category}")
-	`;
+		WHERE 
+			categories.category_name = "${req.query.filter_category}"
+			OR
+			categories.category_name
+			IN 
+			(SELECT
+					subcategory.category_name
+				FROM
+					categories
+				LEFT JOIN categories AS subcategory
+				ON
+					categories.id = subcategory.parent_id
+				WHERE
+					categories.category_name = "${req.query.filter_category}")
+		`;
 
 		let itemCount, productsWithCategs;
 
@@ -102,8 +102,10 @@ const createNewProduct = async (req, res, next) => {
 				`INSERT INTO product_categories (category_id, product_id) VALUES (${+categId.id}, ${productId.id})`
 			);
 		}
-
-		await db_run(`INSERT INTO inventory(product_id, stock) VALUES (${productId.id}, 0)`);
+		const warehouseIds = await db_getAll('SELECT id FROM warehouses');
+		for (const warehouseID of warehouseIds) {
+			await db_run(`INSERT INTO inventory(product_id, stock, warehouse_id) VALUES (${+productId.id}, 0, ${+warehouseID.id})`);
+		}
 		next();
 	} catch (err) {
 		console.error(err);

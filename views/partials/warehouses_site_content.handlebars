@@ -1,53 +1,68 @@
 <div class="container-fluid">
-{{> delete_warehouse_modal }}
+  {{> delete_warehouse_modal }}
 
-<div class="row">
-  <div class="col-sm-6">
-    <div class="card">
-      <div class="card-header">
-          <h5>Raktár neve</h5>
-      </div>
-      <div class="card-body">
-        <h5 class="card-title">Ország</h5>
-        <p class="card-text">Város</p>
-        <div class="container text-right">
-          <a href="#" class="btn btn-primary btn-sm" onclick="delete_warehouse()">Törlés</a>
-          <a href="#" class="btn btn-primary btn-sm" onclick="update_warehouse()">Szerkeszt</a>
+  {{#each warehouses}}
+  <div class="row mb-3">
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-header">
+          <h5>{{this.name}}</h5>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{this.country}}</h5>
+          <p class="card-text">{{this.zip}}, {{this.city}}, {{this.streetAndhn}}</p>
+          <div class="container text-right">
+
+            <button type="button" class="btn btn-info btn-sm" data-whid="{{this.id}}" data-name="{{this.name}}"
+              data-country="{{this.country}}" data-zip="{{this.zip}}" data-city="{{this.city}}"
+              data-street="{{this.streetAndhn}}" onclick="update_warehouse()">Szerkesztés</button>
+            <button type="button" class="btn btn-danger btn-sm" onclick="delete_warehouse()" data-whid="{{this.id}}"
+              data-name="{{this.name}}">Törlés</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="col-sm-6">
+    <div class="col-sm-6">
       <div class="card">
-        <img class="card-img" src="..." alt="Card image">
+        TÉRKÉP
       </div>
+    </div>
   </div>
-</div>
-
+  {{/each}}
 </div>
 
 {{> footer }}
 
 <script>
-      function update_warehouse() {
-        /*const newCategForm = document.querySelector('.new-categs');
-        const categId = event.target.dataset.id;
-        const categName = event.target.dataset.categ_name;
-        newCategForm.action = `/categories/${categId}`;*/
-        $('#new_warehouse').modal();
 
-        /*document.querySelector('#catName').value = categName;
-        document.querySelector('.main-category-selector').style.display = 'none';
-        document.querySelector('.sub-category-selector').style.display = 'none';*/
-    }
+  function update_warehouse() {
+    const newWarehouseForm = document.querySelector('.new-warehouse');
+    const whId = event.target.dataset.whid;
+    const whName = event.target.dataset.name;
+    const whCountry = event.target.dataset.country;
+    const whZip = event.target.dataset.zip;
+    const whCity = event.target.dataset.city;
+    const whStreet = event.target.dataset.street;
 
-    function delete_warehouse() {
-        /*const catId = event.target.dataset.id;
-        const categName = event.target.dataset.categ_name;
-        const deleteForm = document.querySelector('.delete-categ');
-        console.log(document.querySelector('#delete-categ'))
-        deleteForm.action = `/categories/del/${catId}`*/
-        $('#delete_wh_modal').modal();
-        /*document.querySelector('.categ-name').textContent = categName;*/
-    }
+    console.log(whStreet)
+
+    newWarehouseForm.action = `/warehouses/${whId}`;
+    $('#new_warehouse').modal();
+
+    document.querySelector('#whName').value = whName;
+    document.querySelector('#whCountry').value = whCountry;
+    document.querySelector('#whZip').value = whZip;
+    document.querySelector('#whCity').value = whCity;
+    document.querySelector('#wh_street').value = whStreet;
+  }
+
+  function delete_warehouse() {
+    const whId = event.target.dataset.whid;
+    const whName = event.target.dataset.name;
+
+    const deleteForm = document.querySelector('.delete-wh');
+    deleteForm.action = `/warehouses/del/${whId}`
+    $('#delete_wh_modal').modal();
+    document.querySelector('.wh-name').textContent = whName;
+  }
 </script>

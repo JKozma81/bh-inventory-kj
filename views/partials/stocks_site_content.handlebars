@@ -1,21 +1,46 @@
 <div class="table-responsive">
+    <div class="container-fluid d-flex justify-content-end p-3">
+        <form method="GET" action="" class="form-inline filter_by_wh">
+            <div class="form-row align-items-center">
+                <div class="form-group col-md-4">
+                    <label for="filterCat" class="col-form-label">Raktár:</label>
+                </div>
+                <div class="form-group col-md-8">
+                    <input type="text" value="id" name="orderby" hidden>
+                    <input type="text" value="ASC" name="order" hidden>
+                    <input type="text" value="1" name="page" hidden>
+                    <select class="custom-select my-1 mr-sm-2" id="filterwh" name="filter_wh"
+                        onchange="this.form.submit()">
+                        <option selected>Válassz...</option>
+                        {{#each warehouses}}
+                        <option value="{{name}}" {{#ifeq ../filterWH name}}selected{{/ifeq}}>{{name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
     <table class="table table-bordered table-hover table-sm">
         <thead class="thead-light">
             <tr class="nav-pills nav-fill">
-                <th class="text-center nav-item"><a href="/stocks?page={{curentPage}}&order={{order}}&orderby=id"
+                <th class="text-center nav-item"><a
+                        href="/stocks?page={{curentPage}}&order={{order}}&orderby=id{{#if filterWH}}&filter_wh={{filterWH}}{{/if}}"
                         onclick="setOrdering()" class="nav-link {{#ifeq orderby 'id'}}active{{/ifeq}}" data-orderby="id"
-                        data-order="{{order}}">ID
+                        data-order="{{order}}" data-filter="{{filterWH}}">ID
                         <strong>{{#ifeqand order 'ASC' orderby 'id'}}&#9650;{{/ifeqand}}{{#ifeqand order 'DESC' orderby 'id'}}&#9660;{{/ifeqand}}</strong></a>
                 </th>
-                <th class="text-center nav-item"><a href="/stocks?page={{curentPage}}&order={{order}}&orderby=name"
+                <th class="text-center nav-item"><a
+                        href="/stocks?page={{curentPage}}&order={{order}}&orderby=name{{#if filterWH}}&filter_wh={{filterWH}}{{/if}}"
                         class="nav-link {{#ifeq orderby 'name'}}active{{/ifeq}}" onclick="setOrdering()"
-                        data-orderby="name" data-order="{{order}}">Megnevezés
+                        data-orderby="name" data-order="{{order}}" data-filter="{{filterWH}}">Megnevezés
                         <strong>{{#ifeqand order 'ASC' orderby 'name'}}&#9650;{{/ifeqand}}{{#ifeqand order 'DESC' orderby 'name'}}&#9660;{{/ifeqand}}</strong></a>
                 </th>
-                <th class="text-center nav-item"><a href="/stocks?page={{curentPage}}&order={{order}}&orderby=stock"
+                <th class="text-center nav-item"><a
+                        href="/stocks?page={{curentPage}}&order={{order}}&orderby=stock{{#if filterWH}}&filter_wh={{filterWH}}{{/if}}"
                         onclick="setOrdering()" data-orderby="stock"
-                        class="nav-link {{#ifeq orderby 'stock'}}active{{/ifeq}}" data-order="{{order}}">
-                        Mennyiség
+                        class="nav-link {{#ifeq orderby 'stock'}}active{{/ifeq}}" data-order="{{order}}"
+                        data-filter="{{filterWH}}">
+                        Össz darabszám
                         <strong>{{#ifeqand order 'ASC' orderby 'stock'}}&#9650;{{/ifeqand}}{{#ifeqand order 'DESC' orderby 'stock'}}&#9660;{{/ifeqand}}</strong></a>
                 </th>
                 <th class="text-center align-middle">Műveletek</th>
@@ -27,10 +52,11 @@
             <tr>
                 <th class="text-center align-middle">{{this.id}}</th>
                 <td class="text-center align-middle">{{this.name}}</td>
-                <td class="text-center align-middle">{{this.stock}}</td>
+                <td class="text-center align-middle">{{this.full_qty}}</td>
                 <td class="text-center align-middle">
-                    <button type="button" class="btn btn-info btn-sm" data-id={{this.id}} data-stock={{this.stock}}
-                        onclick="showStockModal()">Szerkesztés</button>
+                    <button type="button" class="btn btn-info btn-sm" data-id={{this.id}} data-stock={{this.full_qty}}
+                        data-warehouse="{{this.wh_id}}" onclick="showStockModal()"
+                        {{#unless ../filterWH}}disabled{{/unless}}>Szerkesztés</button>
                 </td>
             </tr>
             {{/each}}
@@ -43,7 +69,8 @@
             <ul class="pagination pagination-sm">
                 {{#if showPrev}}
                 <li class="page-item">
-                    <a class="page-link" href="/stocks?page={{prevPage}}&order={{order}}&orderby={{orderby}}"
+                    <a class="page-link"
+                        href="/stocks?page={{prevPage}}&order={{order}}&orderby={{orderby}}{{#if filterWH}}&filter_wh={{filterWH}}{{/if}}"
                         aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                         <span class="sr-only">Előző</span>
@@ -52,11 +79,13 @@
                 {{/if}}
                 {{#times lastPage}}
                 <li class="page-item {{#ifeq ../curentPage this}}active{{/ifeq}}"><a class="page-link"
-                        href="/stocks?page={{this}}&order={{../order}}&orderby={{../orderby}}">{{this}}</a></li>
+                        href="/stocks?page={{this}}&order={{../order}}&orderby={{../orderby}}{{#if ../filterWH}}&filter_wh={{../filterWH}}{{/if}}">{{this}}</a>
+                </li>
                 {{/times}}
                 {{#if showNext}}
                 <li class="page-item">
-                    <a class="page-link" href="/stocks?page={{nextPage}}&order={{order}}&orderby={{orderby}}"
+                    <a class="page-link"
+                        href="/stocks?page={{nextPage}}&order={{order}}&orderby={{orderby}}{{#if filterWH}}&filter_wh={{filterWH}}{{/if}}"
                         aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                         <span class="sr-only">Következő</span>
@@ -81,11 +110,12 @@
         $('#stock_modal').modal();
         const stockQuantityInput = document.querySelector('#stock_quantity_input');
         stockQuantityInput.value = event.target.dataset.stock;
+        document.querySelector('.wh-id').value = event.target.dataset.warehouse;
 
     }
 
     function setOrdering() {
         event.target.setAttribute('data-order', event.target.dataset.order === 'ASC' ? 'DESC' : 'ASC')
-        event.target.setAttribute('href', `/stocks?page=1&orderby=${event.target.dataset.orderby}&order=${event.target.dataset.order}`);
+        event.target.setAttribute('href', `/stocks?page=1&orderby=${event.target.dataset.orderby}&order=${event.target.dataset.order}${event.target.dataset.filter ? '&filter_wh=' + event.target.dataset.filter : ''}`);
     }
 </script>
