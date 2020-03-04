@@ -24,7 +24,7 @@
     </div>
     <div class="col-sm-6">
       <div class="card">
-        TÉRKÉP
+        <div class="container h-100 map{{@index}}" data-js="map"></div>
       </div>
     </div>
   </div>
@@ -34,6 +34,19 @@
 {{> footer }}
 
 <script>
+
+  function initMap() {
+
+    document.querySelectorAll('div[data-js]').forEach(item => {
+
+      const uluru = { lat: -25.344, lng: 131.036 };
+
+      const map = new google.maps.Map(
+        item, { zoom: 15, center: uluru });
+      const marker = new google.maps.Marker({ position: uluru, map: map });
+    })
+
+  }
 
   function update_warehouse() {
     const newWarehouseForm = document.querySelector('.new-warehouse');
@@ -66,3 +79,7 @@
     document.querySelector('.wh-name').textContent = whName;
   }
 </script>
+
+<script async defer
+  src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBwShCGW3nyzudL_y1m_eimhuOIKE2aODI&callback=initMap">
+  </script>
