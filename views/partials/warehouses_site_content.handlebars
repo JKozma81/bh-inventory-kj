@@ -17,7 +17,7 @@
               data-country="{{this.country}}" data-zip="{{this.zip}}" data-city="{{this.city}}"
               data-street="{{this.streetAndhn}}" onclick="update_warehouse()">Szerkesztés</button>
             <button type="button" class="btn btn-danger btn-sm" onclick="delete_warehouse()" data-whid="{{this.id}}"
-              data-name="{{this.name}}">Törlés</button>
+              data-name="{{this.name}}" {{#unless this.canBeDeleted}}disabled{{/unless}}>Törlés</button>
           </div>
         </div>
       </div>

@@ -7,6 +7,14 @@ router.get('/', getWarehouses, (req, res) => {
 		const whData = {};
 		const splitAddress = warehouseInfo.address.split(', ');
 		whData.id = warehouseInfo.id;
+		const whID = req.stockQtyData.find(whId => whId.id === warehouseInfo.id);
+
+		if (whID) {
+			whData.canBeDeleted = whID.items > 0 ? false : true;
+		} else {
+			whData.canBeDeleted = true;
+		}
+
 		whData.name = warehouseInfo.name;
 		whData.country = splitAddress[0];
 		whData.zip = splitAddress[1];
