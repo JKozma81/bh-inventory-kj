@@ -41,7 +41,7 @@
 
     for (const mapContainer of mapContainers) {
       const mapConfig = {
-        zoom: 13
+        zoom: 14
       }
 
       const geocoder = new google.maps.Geocoder();
@@ -73,8 +73,6 @@
     const whZip = event.target.dataset.zip;
     const whCity = event.target.dataset.city;
     const whStreet = event.target.dataset.street;
-
-    console.log(whStreet)
 
     newWarehouseForm.action = `/warehouses/${whId}`;
     $('#new_warehouse').modal();
