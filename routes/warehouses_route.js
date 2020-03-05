@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { getWarehouses, modifyWarehouse, deleteWarehouse, newWarehouse } = require('../models/warehouses_middlewares');
+const { key } = require('../config/apikey.json');
 
 router.get('/', getWarehouses, (req, res) => {
 	const warehouses = [];
@@ -26,7 +27,8 @@ router.get('/', getWarehouses, (req, res) => {
 	res.render('home', {
 		title: 'Raktárak',
 		warehouses: warehouses,
-		menu: 'warehouses'
+		menu: 'warehouses',
+		key: key
 	});
 });
 

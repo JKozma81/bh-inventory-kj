@@ -24,7 +24,8 @@
     </div>
     <div class="col-sm-6">
       <div class="card">
-        <div class="container h-100 map{{@index}}" data-js="map"></div>
+        <div class="container h-100 map{{@index}}" data-js="map"
+          data-address="{{this.country}} {{this.zip}} {{this.city}} {{this.streetAndhn}}"></div>
       </div>
     </div>
   </div>
@@ -36,15 +37,31 @@
 <script>
 
   function initMap() {
+    const mapContainers = document.querySelectorAll('div[data-js]');
 
-    document.querySelectorAll('div[data-js]').forEach(item => {
+    for (const mapContainer of mapContainers) {
+      const mapConfig = {
+        zoom: 13
+      }
 
-      const uluru = { lat: -25.344, lng: 131.036 };
+      const geocoder = new google.maps.Geocoder();
+      const map = new google.maps.Map(mapContainer, mapConfig);
 
-      const map = new google.maps.Map(
-        item, { zoom: 15, center: uluru });
-      const marker = new google.maps.Marker({ position: uluru, map: map });
-    })
+      const address = mapContainer.dataset.address;
+
+      geocoder.geocode({ 'address': address }, function (results, status) {
+        if (status == 'OK') {
+          map.setCenter(results[0].geometry.location);
+          const marker = new google.maps.Marker({
+            map: map,
+            position: results[0].geometry.location
+          });
+        } else {
+          map.setCenter({ lat: 47.162494, lng: 19.5033041 });
+          map.setZoom(6);
+        }
+      });
+    }
 
   }
 
@@ -80,6 +97,5 @@
   }
 </script>
 
-<script async defer
-  src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBwShCGW3nyzudL_y1m_eimhuOIKE2aODI&callback=initMap">
-  </script>
+<script async defer src="http://maps.googleapis.com/maps/api/js?key={{key}}&callback=initMap">
+</script>
