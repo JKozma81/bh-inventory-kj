@@ -1,0 +1,95 @@
+<div class="modal fade" id="modify_categs" tabindex="-1" role="dialog" aria-labelledby="modify_categs_title"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title" id="new_prod_title">Csoportok Módosítása</h5>
+            </div>
+            <div class="modal-body">
+
+                <form method="POST" action="/categories" class="needs-validation modify-categs">
+                    {{#each categHierarchy}}
+                    <fieldset class="border p-2" data-maincategory="{{this.name}}">
+                        <legend class="scheduler-border">Fő Csoport</legend>
+                        <div class="form-row align-items-center">
+                            <div class="form-group col-md-4">
+                                <label for="cat_name{{@index}}" class="col-form-label">Megnevezés:</label>
+                            </div>
+                            <div class="form-group col-md-8">
+                                <input type="text" name="main_catId" value="{{this.id}}" tabindex="-1" hidden>
+                                <input type="text" class="form-control" id="cat_name{{@index}}"
+                                    name="main_category_name" placeholder="Csoport megnevezése" value="{{this.name}}">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    {{#each this.subCategories}}
+                    <fieldset class="border p-2 mb-3" data-parent="{{../name}}">
+                        <legend class="scheduler-border">Alcsoport</legend>
+                        <div class="form-row align-items-center">
+                            <div class="form-group col-md-4">
+                                <label for="catName{{@index}}" class="col-form-label">Megnevezés:</label>
+                            </div>
+                            <div class="form-group col-md-8">
+                                <input type="text" name="subcategory_id" value="{{this.id}}" tabindex="-1" hidden>
+                                <input type="text" class="form-control" id="cat_name{{@index}}" name="subcategory_name"
+                                    placeholder="Csoport megnevezése" value="{{this.name}}">
+                            </div>
+                        </div>
+                        <div class="form-row align-items-center">
+                            <div class="form-group col-md-6">
+                                <label for="subcateg_main{{@index}}" class="col-form-label">Fő kategória
+                                    csoport:</label>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <select class="custom-select my-1 mr-sm-2" id="subcateg_main{{@index}}"
+                                    name="subcategorys_main_category">
+                                    {{#each ../../maincategories}}
+                                    <option value="{{this.main_cat_name}}">
+                                        {{this.main_cat_name}}
+                                    </option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="maincat_change"
+                                    name="change_to_main" value="{{this.id}} true">
+                                <label class="form-check-label" for="maincat_change">
+                                    Váltás fő csoportra
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    {{/each}}
+                    {{/each}}
+
+                    <div class=" d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Mégsem</button>
+                        <button type="submit" class="btn btn-primary">Ok</button>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    (function () {
+        window.addEventListener('load', function () {
+            const form = document.querySelector('.modify-categs');
+            form.addEventListener('submit', function (event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        }, false);
+    })();
+
+</script>

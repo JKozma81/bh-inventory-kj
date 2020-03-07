@@ -2,22 +2,6 @@
 {{> delete_subcateg_modal }}
 <div class="table-responsive">
     <table class="table table-bordered table-hover table-sm">
-        {{!-- <thead class="thead-light">
-            <tr class="nav-pills nav-fill">
-                <th class="text-center nav-item"><a href="/categories?page={{curentPage}}&order={{order}}&orderby=id"
-                        class="nav-link {{#ifeq orderby 'id'}}active{{/ifeq}}" data-orderby="id" data-order="{{order}}"
-                        onclick="setOrdering()">ID
-                        <strong>{{#ifeqand order 'ASC' orderby 'id'}}&#9650;{{/ifeqand}}{{#ifeqand order 'DESC' orderby 'id'}}&#9660;{{/ifeqand}}</strong></a>
-                </th>
-                <th class="text-center nav-item"><a
-                        href="/categories?page={{curentPage}}&order={{order}}&orderby=category_name"
-                        class="nav-link {{#ifeq orderby 'category_name'}}active{{/ifeq}}" data-orderby="category_name"
-                        data-order="{{order}}" onclick="setOrdering()">Csoport
-                        <strong>{{#ifeqand order 'ASC' orderby 'category_name'}}&#9650;{{/ifeqand}}{{#ifeqand order 'DESC' orderby 'category_name'}}&#9660;{{/ifeqand}}</strong></a>
-                </th>
-                <th class="text-center align-middle">Műveletek</th>
-            </tr>
-        </thead> --}}
         <thead class="thead-light">
             <tr class="nav-pills nav-fill">
                 <th class="text-center nav-item"><a href="/categories?page={{curentPage}}&order={{order}}&orderby=id"
@@ -98,15 +82,34 @@
 
 <script>
     function update_category() {
-        const newCategForm = document.querySelector('.new-categs');
-        const categId = event.target.dataset.id;
-        const categName = event.target.dataset.categ_name;
-        newCategForm.action = `/categories/${categId}`;
-        $('#new_category').modal();
+        if (event.target.dataset.candelete === 'true') {
+            const newCategForm = document.querySelector('.new-categs');
+            const categId = event.target.dataset.id;
+            const categName = event.target.dataset.categ_name;
+            newCategForm.action = `/categories/${categId}`;
+            $('#new_category').modal();
+            document.querySelector('#catName').value = categName;
+            return;
+        }
 
-        document.querySelector('#catName').value = categName;
-        document.querySelector('.main-category-selector').style.display = 'none';
-        document.querySelector('.sub-category-selector').style.display = 'none';
+        const modifyForm = document.querySelector('.modify-categs');
+        const fieldsets = document.querySelectorAll('fieldset');
+
+
+        fieldsets.forEach(item => {
+            if (item.dataset.maincategory !== event.target.dataset.categ_name && item.dataset.parent !== event.target.dataset.categ_name) {
+                item.style.display = 'none';
+                item.disabled = true;
+            } else {
+                item.style.display = 'block';
+                item.disabled = false;
+            }
+        })
+
+        const categId = event.target.dataset.id;
+        modifyForm.action = `/categories/${categId}`;
+        $('#modify_categs').modal();
+
     }
 
     function delete_categ() {
