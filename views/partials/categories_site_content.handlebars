@@ -1,6 +1,8 @@
+{{> delete_categ_modal }}
+{{> delete_subcateg_modal }}
 <div class="table-responsive">
     <table class="table table-bordered table-hover table-sm">
-        <thead class="thead-light">
+        {{!-- <thead class="thead-light">
             <tr class="nav-pills nav-fill">
                 <th class="text-center nav-item"><a href="/categories?page={{curentPage}}&order={{order}}&orderby=id"
                         class="nav-link {{#ifeq orderby 'id'}}active{{/ifeq}}" data-orderby="id" data-order="{{order}}"
@@ -15,21 +17,46 @@
                 </th>
                 <th class="text-center align-middle">Műveletek</th>
             </tr>
+        </thead> --}}
+        <thead class="thead-light">
+            <tr class="nav-pills nav-fill">
+                <th class="text-center nav-item"><a href="/categories?page={{curentPage}}&order={{order}}&orderby=id"
+                        class="nav-link {{#ifeq orderby 'id'}}active{{/ifeq}}" data-orderby="id" data-order="{{order}}"
+                        onclick="setOrdering()">ID
+                        <strong>{{#ifeqand order 'ASC' orderby 'id'}}&#9650;{{/ifeqand}}{{#ifeqand order 'DESC' orderby 'id'}}&#9660;{{/ifeqand}}</strong></a>
+                </th>
+                <th class="text-center nav-item"><a
+                        href="/categories?page={{curentPage}}&order={{order}}&orderby=category_name"
+                        class="nav-link {{#ifeq orderby 'category_name'}}active{{/ifeq}}" data-orderby="category_name"
+                        data-order="{{order}}" onclick="setOrdering()">Fő csoport
+                        <strong>{{#ifeqand order 'ASC' orderby 'category_name'}}&#9650;{{/ifeqand}}{{#ifeqand order 'DESC' orderby 'category_name'}}&#9660;{{/ifeqand}}</strong></a>
+                </th>
+                <th class="text-center nav-item"><a
+                        href="/categories?page={{curentPage}}&order={{order}}&orderby=subcategories"
+                        class="nav-link {{#ifeq orderby 'subcategories'}}active{{/ifeq}}" data-orderby="subcategories"
+                        data-order="{{order}}" onclick="setOrdering()">Alcsoportok
+                        <strong>{{#ifeqand order 'ASC' orderby 'subcategories'}}&#9650;{{/ifeqand}}{{#ifeqand order 'DESC' orderby 'subcategories'}}&#9660;{{/ifeqand}}</strong></a>
+                </th>
+                <th class="text-center align-middle">Műveletek</th>
+            </tr>
         </thead>
         <tbody>
-            {{> delete_categ_modal }}
-            {{#each items}}
+
+            {{#each maincategories}}
             <tr>
-                <th class="text-center align-middle">{{this.id}}</th>
-                <td class="text-center align-middle">{{this.category_name}}</td>
+                <th class="text-center align-middle">{{this.main_cat_id}}</th>
+                <td class="text-center align-middle">{{this.main_cat_name}}</td>
+                <td class="text-center align-middle">{{this.subcategories}}</td>
                 <td class="text-center align-middle">
-                    <button type="button" class="btn btn-info btn-sm" data-id={{this.id}}
-                        data-categ_name="{{this.category_name}}" onclick="update_category()">Szerkesztés</button>
-                    <button type="button" class="btn btn-danger btn-sm" data-id={{this.id}}
-                        data-categ_name="{{this.category_name}}" onclick="delete_categ()" {{#unless this.canBeDeleted}}disabled{{/unless}}>Törlés</button>
+                    <button type="button" class="btn btn-info btn-sm" data-id={{this.main_cat_id}}
+                        data-categ_name="{{this.main_cat_name}}" onclick="update_category()">Szerkesztés</button>
+                    <button type="button" class="btn btn-danger btn-sm" data-id={{this.main_cat_id}}
+                        data-categ_name="{{this.main_cat_name}}" data-candelete="{{this.canBeDeleted}}"
+                        onclick="delete_categ()">Törlés</button>
                 </td>
             </tr>
             {{/each}}
+
         </tbody>
     </table>
 
@@ -38,7 +65,8 @@
             <ul class="pagination pagination-sm">
                 {{#if showPrev}}
                 <li class="page-item">
-                    <a class="page-link" href="/categories?page={{prevPage}}&order={{order}}&orderby={{orderby}}{{#if filterCategory}}&filter_category={{filterCategory}}{{/if}}"
+                    <a class="page-link"
+                        href="/categories?page={{prevPage}}&order={{order}}&orderby={{orderby}}{{#if filterCategory}}&filter_category={{filterCategory}}{{/if}}"
                         aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                         <span class="sr-only">Előző</span>
@@ -47,11 +75,13 @@
                 {{/if}}
                 {{#times lastPage}}
                 <li class="page-item {{#ifeq ../curentPage this}}active{{/ifeq}}"><a class="page-link"
-                        href="/categories?page={{this}}&order={{../order}}&orderby={{../orderby}}{{#if ../filterCategory}}&filter_category={{../filterCategory}}{{/if}}">{{this}}</a></li>
+                        href="/categories?page={{this}}&order={{../order}}&orderby={{../orderby}}{{#if ../filterCategory}}&filter_category={{../filterCategory}}{{/if}}">{{this}}</a>
+                </li>
                 {{/times}}
                 {{#if showNext}}
                 <li class="page-item">
-                    <a class="page-link" href="/categories?page={{nextPage}}&order={{order}}&orderby={{orderby}}{{#if filterCategory}}&filter_category={{filterCategory}}{{/if}}"
+                    <a class="page-link"
+                        href="/categories?page={{nextPage}}&order={{order}}&orderby={{orderby}}{{#if filterCategory}}&filter_category={{filterCategory}}{{/if}}"
                         aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                         <span class="sr-only">Következő</span>
@@ -80,13 +110,27 @@
     }
 
     function delete_categ() {
+
+        if (event.target.dataset.candelete === 'true') {
+            const catId = event.target.dataset.id;
+            const categName = event.target.dataset.categ_name;
+            const deleteForm = document.querySelector('.delete-categ');
+            deleteForm.action = `/categories/del/${catId}`
+            $('#delete_cat_modal').modal();
+            document.querySelector('.categ-name').textContent = categName;
+            return;
+        }
+
         const catId = event.target.dataset.id;
         const categName = event.target.dataset.categ_name;
-        const deleteForm = document.querySelector('.delete-categ');
-        console.log(document.querySelector('#delete-categ'))
-        deleteForm.action = `/categories/del/${catId}`
-        $('#delete_cat_modal').modal();
-        document.querySelector('.categ-name').textContent = categName;
+        const deleteSubCategForm = document.querySelector('.delete-subcategories');
+
+        document.querySelectorAll('option[data-parent]').forEach(item => {
+            if (categName !== item.dataset.parent) { item.style.display = 'none'; } else { item.style.display = 'block'; }
+        })
+
+        deleteSubCategForm.action = `/categories/del`;
+        $('#delete_subcat_modal').modal();
     }
 
     function setOrdering() {

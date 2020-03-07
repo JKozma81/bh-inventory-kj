@@ -5,8 +5,8 @@ body {
 }
 
 div[data-js] {
-	min-height: 200px;  /* The height is 400 pixels */
-	width: 100%;  /* The width is the width of the web page */
+	min-height: 200px;
+	width: 100%;
    }
 
 img {

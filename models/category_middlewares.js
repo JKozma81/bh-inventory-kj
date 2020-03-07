@@ -5,41 +5,42 @@ const LIMIT = 30;
 const getAlldata = async (req, res, next) => {
 	try {
 		req.offset = req.query.page ? (+req.query.page - 1) * LIMIT : 0;
-		const data = await db_getAll(
-			`SELECT
-			id,
-			category_name,
-			parent_id
-			FROM categories
-			ORDER BY ${Object.keys(req.query).length === 0 ? 'id' : req.query.orderby} ${Object.keys(req.query).length === 0
+
+		let orderingBy;
+
+		if (Object.keys(req.query).length === 0 && req.query.orderby) {
+			if (req.query.orderby === 'id') orderingBy = 'main_cat_id';
+			if (req.query.orderby === 'category_name') orderingBy = 'main_cat_name';
+		} else {
+			orderingBy = 'main_cat_id';
+		}
+
+
+		const mainsWithSubs = await db_getAll(`
+		SELECT maincategory.id AS main_cat_id,
+		maincategory.category_name AS main_cat_name,
+		GROUP_CONCAT(subcategory.category_name, ", ") AS subcategories
+		FROM categories AS maincategory
+		LEFT JOIN categories AS subcategory
+		ON maincategory.id = subcategory.parent_id
+		WHERE maincategory.parent_id IS NULL
+		GROUP BY maincategory.id
+		ORDER BY ${Object.keys(req.query).length === 0 ? 'main_cat_id' : orderingBy} ${Object.keys(req.query).length === 0
 				? 'ASC'
 				: req.query.order}
-			LIMIT ${LIMIT}
-			OFFSET ${req.offset}`
-		);
+		LIMIT ${LIMIT}
+		OFFSET ${req.offset}`);
 
-		const categoriesData = data.map((category) => {
-			const tempObj = {};
-			({ id: tempObj.id, category_name: tempObj.category_name, parent_id: tempObj.parent_id } = category);
+		const categoryHierarchy = await db_getAll('select maincategory.id as main_cat_id, maincategory.category_name as main_cat_name, subcategory.id as sub_cat_id, subcategory.category_name as subcategory from categories as maincategory left join categories as subcategory on maincategory.id = subcategory.parent_id where maincategory.parent_id is null');
 
-			if (category.parent_id === null && data.find((categ) => category.id === categ.parent_id)) {
-				tempObj.canBeDeleted = false;
-				return tempObj;
-			}
+		const categoriyCount = await db_get('SELECT COUNT(id) AS items FROM categories where parent_id is null');
 
-			tempObj.canBeDeleted = true;
-			return tempObj;
-		});
-
-		const mainCategories = categoriesData.filter((category) => category.parent_id === null);
-
-		const categoriyCount = await db_get('SELECT COUNT(id) AS items FROM categories');
-
-		req.totalProducts = categoriyCount.items;
+		req.totalCategories = categoriyCount.items;
 		req.limit = LIMIT;
 
-		req.mainCategories = mainCategories;
-		req.data = categoriesData;
+		req.mainCategories = mainsWithSubs;
+		req.categoryHierarchy = categoryHierarchy;
+
 		next();
 	} catch (err) {
 		console.error(err);
@@ -88,4 +89,27 @@ const deleteCategory = async (req, res, next) => {
 	}
 };
 
-module.exports = { getAlldata, newCategory, modifyCategory, deleteCategory };
+const deleteSubCategory = async (req, res, next) => {
+	try {
+
+		const { deleted_categs } = req.body;
+
+		if (deleted_categs instanceof Object) {
+			for (const category of deleted_categs) {
+				const categoryId = await db_get(`SELECT id FROM categories WHERE category_name = "${category}"`)
+				await db_run(`DELETE FROM product_categories WHERE category_id = ${categoryId.id}`);
+				await db_run(`DELETE FROM categories WHERE category_name = "${category}"`);
+			}
+		} else {
+			const categoryId = await db_get(`SELECT id FROM categories WHERE category_name = "${deleted_categs}"`)
+			await db_run(`DELETE FROM product_categories WHERE category_id = ${categoryId.id}`);
+			await db_run(`DELETE FROM categories WHERE category_name = "${deleted_categs}"`);
+		}
+
+		next();
+	} catch (err) {
+		console.error(err);
+	}
+}
+
+module.exports = { getAlldata, newCategory, modifyCategory, deleteCategory, deleteSubCategory };
