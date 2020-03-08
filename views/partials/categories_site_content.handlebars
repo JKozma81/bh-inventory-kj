@@ -96,6 +96,13 @@
         const modifyForm = document.querySelector('.modify-categs');
         const fieldsets = document.querySelectorAll('fieldset');
 
+        const subcategoryFieldsets = document.querySelectorAll('fieldset[data-parent]');
+
+        subcategoryFieldsets.forEach(function (subcategoryContainer) {
+            Array.from(subcategoryContainer.children[2].children[1].children[0].children).forEach(option => {
+                if (option.value === subcategoryContainer.dataset.parent) option.selected = true;
+            })
+        })
 
         fieldsets.forEach(item => {
             if (item.dataset.maincategory !== event.target.dataset.categ_name && item.dataset.parent !== event.target.dataset.categ_name) {
