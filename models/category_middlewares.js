@@ -62,11 +62,11 @@ const newCategory = async (req, res, next) => {
 
 		if (categoryRole === 'mainCategory') {
 			await db_run(`INSERT INTO categories(category_name) VALUES ("${categ_name}")`);
-		} else {
-			const mainCatId = await db_get(`SELECT id FROM categories WHERE category_name = "${mainCategoryName}"`);
-			await db_run(`INSERT INTO categories(category_name, parent_id) VALUES ("${categ_name}", ${mainCatId.id})`);
+			return next();
 		}
 
+		const mainCatId = await db_get(`SELECT id FROM categories WHERE category_name = "${mainCategoryName}"`);
+		await db_run(`INSERT INTO categories(category_name, parent_id) VALUES ("${categ_name}", ${mainCatId.id})`);
 		next();
 	} catch (err) {
 		console.error(err);

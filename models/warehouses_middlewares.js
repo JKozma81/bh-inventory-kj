@@ -6,7 +6,13 @@ const getWarehouses = async (req, res, next) => {
 
 		const whStockQty = [];
 		for (const whData of warehousesData) {
-			const whItemCount = await db_getAll(`SELECT warehouses.id, COUNT(product_id) as items FROM inventory JOIN warehouses ON inventory.warehouse_id = warehouses.id WHERE inventory.warehouse_id = ${whData.id}`);
+			const whItemCount = await db_getAll(`
+			SELECT warehouses.id,
+			COUNT(product_id) as items
+			FROM inventory
+			JOIN warehouses
+			ON inventory.warehouse_id = warehouses.id
+			WHERE inventory.warehouse_id = ${whData.id}`);
 			whStockQty.push(...whItemCount)
 		}
 		req.whData = warehousesData;
