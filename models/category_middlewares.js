@@ -78,16 +78,6 @@ const modifyCategory = async (req, res, next) => {
 		const catId = req.params.id;
 		const { categ_name } = req.body;
 
-		console.log(req.body)
-		/*
-		mainCatId: '1',
-		main_category_name: 'Számítástechnika',
-		subcategory_id: [ '12', '13' ],
-		subcategory_name: [ 'Alaplapok', 'Perifériák' ],
-		subcategorys_main_category: [ 'Számítástechnika', 'Számítástechnika' ],
-		change_to_main: [ '12 true', '13 true' ]
-		*/
-
 		if (typeof +catId === 'number' && categ_name) {
 			await db_run(`UPDATE categories SET category_name = "${categ_name}" WHERE id = ${+catId}`);
 		} else if (typeof +catId === 'number') {

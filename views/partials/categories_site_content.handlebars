@@ -33,7 +33,8 @@
                 <td class="text-center align-middle">{{this.subcategories}}</td>
                 <td class="text-center align-middle">
                     <button type="button" class="btn btn-info btn-sm" data-id={{this.main_cat_id}}
-                        data-categ_name="{{this.main_cat_name}}" onclick="update_category()">Szerkesztés</button>
+                        data-categ_name="{{this.main_cat_name}}" data-candelete="{{this.canBeDeleted}}"
+                        onclick="update_category()">Szerkesztés</button>
                     <button type="button" class="btn btn-danger btn-sm" data-id={{this.main_cat_id}}
                         data-categ_name="{{this.main_cat_name}}" data-candelete="{{this.canBeDeleted}}"
                         onclick="delete_categ()">Törlés</button>
